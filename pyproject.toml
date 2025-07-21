@@ -1,0 +1,14 @@
+[project]
+name = "coursework-lite"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.116.1",
+    "passlib[bcrypt]>=1.7.4",
+    "pymongo>=4.13.2",
+    "python-dotenv>=1.1.1",
+    "python-jose>=3.5.0",
+    "uvicorn>=0.35.0",
+]
