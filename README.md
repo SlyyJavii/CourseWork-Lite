@@ -18,7 +18,7 @@ The application is built with a modern technology stack using a layered architec
   * **Frontend:** React.js (Single-Page Application)
   * **Backend:** Python (RESTful API)
   * **Database:** MongoDB Atlas
-  * **Data Access:** Mongoose
+  * **Package Management:** uv (Python) / npm (Node.js)
   * **Deployment:**
       * **Frontend:** Vercel / Netlify
       * **Backend:** Render / Heroku
@@ -85,16 +85,3 @@ This project was developed by a dedicated team of five students for the CEN 4010
   * **Anelys Izquierdo:** Frontend Developer (UI Elements)
   * **Hazel Hernandez:** Frontend Developer (Views, Filters, & Reminders)
   * **Javier Brasil:** Backend Developer & System Integration Testing
-
-
-## Technology Stack
-
-The application is built with a modern technology stack using a layered architecture.
-
-  * **Backend:** Python / FastAPI
-  * **Frontend:** React.js
-  * **Database:** MongoDB Atlas
-  * **Package Management:** uv (Python) / npm (Node.js)
-  * **Deployment:**
-      * **Frontend:** Vercel / Netlify
-      * **Backend:** Render / Heroku
