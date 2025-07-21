@@ -76,32 +76,6 @@ To get a local copy up and running, follow these steps. Please note that this as
     uv run uvicorn main:app --reload
     ```
 
-#### **Frontend (React)**
-
-1.  **Navigate to the frontend directory:**
-
-    ```sh
-    cd coursework-lite-frontend
-    ```
-
-2.  **Install NPM packages:**
-
-    ```sh
-    npm install
-    ```
-
-3.  **Run the frontend development server:**
-
-    ```sh
-    npm run dev
-    ```
-
-Your application should now be running, with the frontend available on `http://localhost:3000` (or another port) and the backend API on `http://localhost:8000`.
-
-### Installation
-
-1. Clone the repository.
-
 ## Project Team
 
 This project was developed by a dedicated team of five students for the CEN 4010 Software Engineering I course.
