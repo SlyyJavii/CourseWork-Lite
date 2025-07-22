@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 from database import users_collection
 from auth import get_password_hash, verify_password, create_access_token
@@ -22,9 +22,7 @@ class CreationResponse(BaseModel):
     """Model for the response when a user is created or fetched."""
     username: str
     email: EmailStr
-    
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserLogin(BaseModel):
     """Model for user login."""
@@ -35,9 +33,7 @@ class LoginResponse(BaseModel):
     """Model for the response after a successful login."""
     access_token: str
     token_type: str = "bearer"
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- API Endpoints ---
 @router.post("/register", response_model=CreationResponse, status_code=status.HTTP_201_CREATED)

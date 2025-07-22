@@ -1,6 +1,5 @@
 # Ignore python cache files
-/backend/__pycache__/
-/backend/routers/__pycache__
+*__pycache__
 
 # Dependencies
 # Ignore the node_modules directory, where all third-party packages are installed.
