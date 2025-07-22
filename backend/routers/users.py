@@ -1,5 +1,10 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, EmailStr, Field
+from passlib.context import CryptContext
+from ..database import users_collection
+
+# --- Security & Hashing ---
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 router = APIRouter(
     prefix="/users",
@@ -23,6 +28,7 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
+# --- API Endpoints ---
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register_user(user: UserCreate):
     """
