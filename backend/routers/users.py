@@ -1,10 +1,8 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, EmailStr, Field
-from passlib.context import CryptContext
-from database import users_collection
 
-# --- Security & Hashing ---
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+from database import users_collection
+from auth import get_password_hash, verify_password, create_access_token
 
 router = APIRouter(
     prefix="/users",
@@ -14,13 +12,13 @@ router = APIRouter(
 # --- Pydantic Models (Data Schemas) ---
 # These models define the shape and data types for API requests and responses.
 
-class UserCreate(BaseModel):
+class UserCreation(BaseModel):
     """Model for creating a new user."""
     username: str = Field(..., min_length=3, max_length=50)
     email: EmailStr
     password: str = Field(..., min_length=8)
 
-class UserResponse(BaseModel):
+class CreationResponse(BaseModel):
     """Model for the response when a user is created or fetched."""
     username: str
     email: EmailStr
@@ -28,9 +26,22 @@ class UserResponse(BaseModel):
     class Config:
         from_attributes = True
 
+class UserLogin(BaseModel):
+    """Model for user login."""
+    email: EmailStr
+    password: str
+
+class LoginResponse(BaseModel):
+    """Model for the response after a successful login."""
+    access_token: str
+    token_type: str = "bearer"
+
+    class Config:
+        from_attributes = True
+
 # --- API Endpoints ---
-@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-async def register_user(user: UserCreate):
+@router.post("/register", response_model=CreationResponse, status_code=status.HTTP_201_CREATED)
+async def register_user(user: UserCreation):
     """
     Handles user registration.
     
@@ -47,7 +58,7 @@ async def register_user(user: UserCreate):
         )
 
     # Hash the password
-    hashed_password = pwd_context.hash(user.password)
+    hashed_password = get_password_hash(user.password)
 
     # Create the user document to be inserted
     user_document = {
@@ -60,3 +71,37 @@ async def register_user(user: UserCreate):
     users_collection.insert_one(user_document)
     
     return user_document
+
+@router.post("/login", response_model=LoginResponse,status_code=status.HTTP_202_ACCEPTED)
+async def login_user(user: UserLogin):
+    """
+    Handles user login.
+    
+    - Verifies the user's email and password.
+    - Returns a JWT token if successful.
+    """
+    # Find the user by email
+    existing_user = get_user_by_email(user.email)
+    # Verify the password
+    if not existing_user or not verify_password(user.password, existing_user["password_hash"]):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password."
+        )
+
+    # Create a JWT token for the user
+    access_token = create_access_token(data={"sub": existing_user["email"]})
+
+    return {
+        "access_token": access_token
+    }
+
+# --- Utility Functions ---
+def get_user_by_email(email: str):
+    """
+    Fetch a user from the database by their email.
+    
+    :param email: The email of the user to fetch.
+    :return: The user document if found, otherwise None.
+    """
+    return users_collection.find_one({"email": email})
