@@ -1,4 +1,5 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 
 from database import users_collection
@@ -69,7 +70,7 @@ async def register_user(user: UserCreation):
     return user_document
 
 @router.post("/login", response_model=LoginResponse,status_code=status.HTTP_202_ACCEPTED)
-async def login_user(user: UserLogin):
+async def login_user(form_data: OAuth2PasswordRequestForm = Depends()):
     """
     Handles user login.
     
@@ -77,9 +78,9 @@ async def login_user(user: UserLogin):
     - Returns a JWT token if successful.
     """
     # Find the user by email
-    existing_user = get_user_by_email(user.email)
+    existing_user = get_user_by_email(form_data.username)
     # Verify the password
-    if not existing_user or not verify_password(user.password, existing_user["password_hash"]):
+    if not existing_user or not verify_password(form_data.password, existing_user["password_hash"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid email or password."

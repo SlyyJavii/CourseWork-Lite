@@ -25,7 +25,7 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # OAuth2 Scheme
 # tokenUrl="token" tells FastAPI that the client should go to the /token path to get the token.
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/login")
 
 
 # --- UTILITY FUNCTIONS ---
