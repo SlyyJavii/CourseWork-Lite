@@ -1,7 +1,5 @@
-# main.py
-
 from fastapi import FastAPI
-from backend.routers import users, courses, tasks
+from routers import users, courses, tasks
 
 # --- Application Setup ---
 

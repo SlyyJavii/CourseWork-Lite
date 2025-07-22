@@ -1,5 +1,5 @@
 # Ignore python cache files
-backend/__pycache__/
+/backend/__pycache__/
 
 # Dependencies
 # Ignore the node_modules directory, where all third-party packages are installed.
@@ -14,7 +14,7 @@ backend/__pycache__/
 # Ignore all .env files to protect sensitive data like API keys and database credentials.
 # Only commit the template file (.env.example) to show what variables are needed.
 .env
-backend/.venv
+/backend/.venv
 
 # Logs
 # Ignore log files, as they are specific to a user's local environment.

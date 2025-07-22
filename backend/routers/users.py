@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, EmailStr, Field
 from passlib.context import CryptContext
-from ..database import users_collection
+from database import users_collection
 
 # --- Security & Hashing ---
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
