@@ -66,6 +66,7 @@ async def read_root():
     """A simple root endpoint to confirm the API is running."""
     return {"message": "Welcome to the CourseWork Lite API!"}
 
+# --- User Endpoints ---
 @app.post("/users/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED, tags=["Users"])
 async def register_user(user: UserCreate):
     """
@@ -98,9 +99,6 @@ async def register_user(user: UserCreate):
     
     return user_document
 
-
-# --- Placeholder Endpoints for Future Development ---
-
 @app.post("/token", tags=["Users"])
 async def login_for_access_token():
     """Placeholder: This endpoint will handle user login and JWT generation."""
@@ -110,16 +108,58 @@ async def login_for_access_token():
     # 3. Creating and returning a JWT if credentials are valid.
     return {"message": "Login endpoint placeholder."}
 
-
+# --- Course Endpoints ---
 @app.post("/courses", tags=["Courses"])
 async def create_course():
     """Placeholder: This endpoint will create a new course."""
     # Logic will be protected and require an authenticated user (via JWT).
     return {"message": "Create course endpoint placeholder."}
 
+@app.get("/courses", tags=["Courses"])
+async def get_all_courses():
+    """Placeholder: This endpoint will retrieve all courses for the logged-in user."""
+    # Logic will be protected and require an authenticated user.
+    return {"message": "Get all courses endpoint placeholder."}
 
+@app.get("/courses/{course_id}", tags=["Courses"])
+async def get_course(course_id: str):
+    """Placeholder: This endpoint will retrieve a specific course by its ID."""
+    # Logic will be protected and require an authenticated user.
+    return {"message": f"Get course {course_id} endpoint placeholder."}
+
+@app.put("/courses/{course_id}", tags=["Courses"])
+async def update_course(course_id: str):
+    """Placeholder: This endpoint will update a specific course by its ID."""
+    # Logic will be protected and require an authenticated user.
+    return {"message": f"Update course {course_id} endpoint placeholder."}
+
+# --- Task Endpoints ---
 @app.get("/tasks", tags=["Tasks"])
 async def get_all_tasks():
     """Placeholder: This endpoint will retrieve all tasks for the logged-in user."""
     # Logic will be protected and require an authenticated user.
     return {"message": "Get all tasks endpoint placeholder."}
+
+@app.post("/tasks", tags=["Tasks"])
+async def create_task():
+    """Placeholder: This endpoint will create a new task."""
+    # Logic will be protected and require an authenticated user.
+    return {"message": "Create task endpoint placeholder."}
+
+@app.get("/tasks/{task_id}", tags=["Tasks"])
+async def get_task(task_id: str):
+    """Placeholder: This endpoint will retrieve a specific task by its ID."""
+    # Logic will be protected and require an authenticated user.
+    return {"message": f"Get task {task_id} endpoint placeholder."}
+
+@app.put("/tasks/{task_id}", tags=["Tasks"])
+async def update_task(task_id: str):    
+    """Placeholder: This endpoint will update a specific task by its ID."""
+    # Logic will be protected and require an authenticated user.
+    return {"message": f"Update task {task_id} endpoint placeholder."}
+
+@app.delete("/tasks/{task_id}", tags=["Tasks"])
+async def delete_task(task_id: str):
+    """Placeholder: This endpoint will delete a specific task by its ID."""
+    # Logic will be protected and require an authenticated user.
+    return {"message": f"Delete task {task_id} endpoint placeholder."}
