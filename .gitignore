@@ -1,5 +1,6 @@
 # Ignore python cache files
 *__pycache__
+*pytest_cache
 
 # Dependencies
 # Ignore the node_modules directory, where all third-party packages are installed.
