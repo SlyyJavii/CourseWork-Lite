@@ -1,24 +1,52 @@
-# Frontend Infrastructure (Setup Phase)
+# CourseWork Lite Frontend
 
-This folder contains the foundational structure for the CourseWork Lite frontend.
+A clean, modular React/Vite scaffold for the CourseWork Lite application.
 
-## Structure
+---
 
-```
+## 📁 Folder Structure
 frontend/
-├── public/
+├── public/ # Static assets & index.html
 ├── src/
-│   ├── components/
-│   ├── pages/
-│   └── App.jsx
-└── README.md
-```
+│ ├── api/ # Axios wrappers for talking to the FastAPI backend
+│ ├── components/ # Shared UI pieces (Navbar, etc.)
+│ ├── pages/ # Route‑level components (Login, Register, Dashboard…)
+│ ├── styles/ # One CSS file per page/component
+│ ├── App.jsx # Main router & layout
+│ └── main.jsx # ReactDOM entrypoint
+├── .env # (optional) override VITE_API_BASE_URL
+├── package.json
+└── README.md # (this file)
 
-## Work By: Ehab Kayyali
+## 🛠 Work By: Ehab Kayyali
 
-As the Infrastructure, Deployment, and Testing Support lead, I created this scaffold to:
-- Provide a clean and modular React project structure
-- Prepare for frontend contributions by UI developers
-- Set up the deployment and config pipeline in advance
+As the Infrastructure, Deployment, and Testing Support lead, I:
 
-Further implementation (UI, state management, API integration) will be handled once the frontend team pushes their components.
+- Created the initial scaffold with React + Vite
+- Set up routing using React Router (Login, Register, Dashboard, Courses, Profile, Tasks)
+- Verified all routing and UI page transitions
+- Configured frontend hosting via Vercel
+- Ensured working build for team push
+- Confirmed that all current pages render correctly
+
+✅ **Register is working.**
+🚫 **Login does not yet authenticate — backend connection needed.**
+
+⚠️ UI is currently functional but unstyled (design/layout pass pending).
+
+---
+
+## Quick Start
+
+1. **Install Dependencies**  
+   ```bash
+   cd frontend
+   npm install
+
+2. **Run Dev Server**
+    npm run dev
+Open your browser at http://localhost:5173
+
+3. **Build For Production**
+    npm run build
+Outputs static files to dist/
