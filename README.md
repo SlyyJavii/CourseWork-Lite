@@ -25,56 +25,7 @@ The application is built with a modern technology stack using a layered architec
 
 ## Getting Started
 
-To get a local copy up and running, follow these steps. Please note that this assumes you are running Linux, commands may be different for Windows.
-
-### Prerequisites
-
-  * Python (3.10+)
-  * uv (install from [Astral's official site](https://github.com/astral-sh/uv))
-
-### Installation & Setup
-
-#### **Backend (Python)**
-
-1.  **Clone the repository:**
-    ```
-    git clone https://github.com/SlyyJavii/CourseWork-Lite/tree/develop
-    ```
-
-2.  **Navigate to the backend directory:**
-    ```
-    cd backend
-    ```
-
-3.  **Create a virtual environment with `uv`:**
-
-    ```
-    uv venv
-    ```
-
-    This creates a virtual environment in a `.venv` folder.
-    Activate it by running
-    ```
-    source .venv/bin/activate
-    ```
-
-4.  **Install dependencies using `uv`:**
-
-    ```
-    uv sync
-    ```
-
-5.  **Set up environment variables:**
-
-      * Create a `.env` file in the backend root by copying the `.env.example` file.
-      * Add your `MONGO_URI` and a secure `JWT_SECRET_KEY`.
-      * I used [JWTSecrets](https://jwtsecrets.com/#generator) to generate a token.
-
-6.  **Run the backend server:**
-
-    ```sh
-    uv run uvicorn main:app --reload
-    ```
+To get a local copy up and running review the Backend & Frontend directories for instructions.
 
 ## Project Team
 
