@@ -9,12 +9,13 @@ from pymongo import MongoClient
 # Load environment variables from .env file
 load_dotenv()
 MONGO_URI = os.getenv("MONGO_URI")
+MONGO_DB_NAME = os.getenv("MONGO_DB_NAME")
 
 # --- DATABASE CONNECTION ---
 
 try:
     client = MongoClient(MONGO_URI)
-    db = client.coursework_lite_db
+    db = client[MONGO_DB_NAME]
     users_collection = db.users
     courses_collection = db.courses
     tasks_collection = db.tasks
