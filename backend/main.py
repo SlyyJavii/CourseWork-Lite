@@ -1,7 +1,14 @@
 # main.py
+import os
+from dotenv import load_dotenv
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from routers import users, courses, tasks
 from fastapi.middleware.cors import CORSMiddleware
+
+
+
+# --- Application Setup ---
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -9,6 +16,7 @@ app = FastAPI(
     description="API for managing academic tasks and courses.",
     version="1.0.0"
 )
+
 
 # Add CORS Middleware so the frontend can talk to the backend
 app.add_middleware(
@@ -18,6 +26,26 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Load environment variables from .env file
+load_dotenv()
+# Configure CORS settings
+cors_origins = os.getenv("CORS_ORIGINS", "")
+
+origins = [origin.strip() for origin in cors_origins.split(",")]
+
+if origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,       # The list of origins that are allowed to make requests
+        allow_credentials=True,      # Allows cookies to be included in requests
+        allow_methods=["*"],         # Allows all methods (GET, POST, etc.)
+        allow_headers=["*"],         # Allows all headers
+    )
+    print(f"CORS middleware configured for origins: {origins}")
+else:
+    raise Exception("CORS middleware not configured. No CORS_ORIGINS environment variable found.")
+
 
 # Include routers for different functionalities / endpoints
 app.include_router(users.router)

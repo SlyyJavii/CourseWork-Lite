@@ -1,6 +1,6 @@
 [project]
 name = "coursework-lite"
-version = "0.1.0"
+version = "1.0.0"
 description = "Backend system for Courswork Lite"
 readme = "README.md"
 requires-python = ">=3.10"

@@ -44,7 +44,7 @@ To get a local copy up and running, follow these steps. Please note that this as
 5.  **Set up environment variables:**
 
       * Create a `.env` file in the backend root by copying the `.env.example` file.
-      * Add your `MONGO_URI` and a secure `JWT_SECRET_KEY`.
+      * Add your `MONGO_URI`, a secure `JWT_SECRET_KEY`, the `MONGO_DB_NAME`, and adjust your `CORS_ORIGINS` if needed.
       * I used [JWTSecrets](https://jwtsecrets.com/#generator) to generate a token.
 
 6.  **Run the backend server:**
