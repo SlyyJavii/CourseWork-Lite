@@ -1,7 +1,7 @@
 import React from 'react';
 import { registerUser, loginUser } from './api/auth';
 
-
+// Auth test complete - Ehab
 const App = () => {
   const handleRegister = async () => {
     try {
@@ -43,3 +43,4 @@ const App = () => {
 };
 
 export default App;
+"// force update" 
