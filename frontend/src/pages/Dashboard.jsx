@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../api/axios';
 
@@ -12,18 +12,22 @@ import AddCourseModal from '../components/AddCourseModal';
 import AddTaskModal from '../components/AddTaskModal';
 import EditCourseModal from '../components/EditCourseModal';
 import EditTaskModal from '../components/EditTaskModal';
+import Reminders from '../components/Reminders';
 
 // Importing styles specific to the Dashboard component.
 // This CSS file contains styles for the dashboard layout, header, and other elements.  
 import '../styles/Dashboard.css';
 
 const Dashboard = () => {
+  // State variables for managing courses, tasks, and UI state.
   const { logout } = useAuth(); // Assuming useAuth is imported
   const [courses, setCourses] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [selectedCourseId, setSelectedCourseId] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showArchived, setShowArchived] = useState(false);
+  const [sortConfig,setSortConfig] = useState({key: 'title',direction: 'ascending'});
 
   // Manage state for modals
   const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
@@ -47,6 +51,7 @@ const Dashboard = () => {
         setCourses(coursesResponse.data);
         setTasks(tasksResponse.data);
       } catch (err) {
+        console.error('Error fetching dashboard data:', err);
         setError('Failed to load dashboard data.');
       } finally {
         setLoading(false);
@@ -54,6 +59,30 @@ const Dashboard = () => {
     };
     fetchData();
   }, []); // The empty dependency array [] means this effect runs only once.
+
+  // --- Dynamic Reminder Calculation ---
+  // We use useMemo to derive the reminder tasks from the main tasks state.
+  // This logic will automatically re-run whenever the `tasks` array changes.
+  const reminderTasks = useMemo(() => {
+    const now = new Date();
+    const twentyFourHoursFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+    const overdue = [];
+    const dueSoon = [];
+
+    tasks.forEach(task => {
+      if (task.status === 'active' && task.dueDate) {
+        const dueDate = new Date(task.dueDate);
+        if (dueDate < now) {
+          overdue.push(task);
+        } else if (dueDate <= twentyFourHoursFromNow) {
+          dueSoon.push(task);
+        }
+      }
+    });
+
+    return { overdue, dueSoon };
+  }, [tasks]); // The dependency array ensures this runs when `tasks` is updated.
 
   // Handlers for adding, editing, and deleting courses and tasks.
   // These functions update the state and handle the logic for adding, editing, and deleting courses
@@ -125,9 +154,50 @@ const Dashboard = () => {
     }
   };
 
-  const filteredTasks = selectedCourseId === 'all'
-    ? tasks
-    : tasks.filter(task => task.courseId === selectedCourseId);
+
+  // --- Sorting and Filtering Logic ---
+  // This useMemo hook is used to optimize the sorting and filtering of tasks.
+  // It recalculates the sorted and filtered tasks only when tasks, selectedCourseId,
+  // showArchived, or sortConfig changes.
+  // This prevents unnecessary recalculations on every render, improving performance.
+  const sortedAndFilteredTasks = useMemo(() => {
+    let filtered = tasks
+      .filter(task => (showArchived ? task.status === 'complete' : task.status === 'active'))
+      .filter(task => selectedCourseId === 'all' || task.courseId === selectedCourseId);
+
+    const sorted = [...filtered].sort((a, b) => {
+      let aValue = a[sortConfig.key];
+      let bValue = b[sortConfig.key];
+
+      // Handle different data types for sorting
+      if (sortConfig.key === 'dueDate') {
+        aValue = a.dueDate ? new Date(a.dueDate) : new Date(0); // Handle null dates
+        bValue = b.dueDate ? new Date(b.dueDate) : new Date(0);
+      } else if (sortConfig.key === 'priority') {
+        const priorityMap = { 'Low': 1, 'Medium': 2, 'High': 3 };
+        aValue = priorityMap[a.priority] || 0;
+        bValue = priorityMap[b.priority] || 0;
+      }
+
+      // Comparison logic
+      if (aValue < bValue) {
+        return sortConfig.direction === 'ascending' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
+    });
+    return sorted;
+  }, [tasks, selectedCourseId, showArchived, sortConfig]);
+
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
 
   if (loading) return <div className="loading-message">Loading dashboard...</div>;
   if (error) return <div className="error-message">{error}</div>;
@@ -147,15 +217,22 @@ const Dashboard = () => {
             onAddCourse={() => setIsAddCourseModalOpen(true)}
             onEditCourse={handleEditCourse}
             onDeleteCourse={handleCourseDeleted}
+            showArchived={showArchived}
+            onToggleArchived={() => setShowArchived(!showArchived)}
           />
-          <TaskList
-            tasks={filteredTasks}
+          <div className="task-area">
+            <Reminders tasks={reminderTasks} />
+            <TaskList
+            tasks={sortedAndFilteredTasks}
             courses={courses}
             onAddTask={() => setIsAddTaskModalOpen(true)}
             onEditTask={handleEditTask}
             onDeleteTask={handleTaskDeleted}
             onTaskStatusChange={handleTaskStatusChange}
+            sortConfig={sortConfig}
+            onSort={handleSort}
           />
+          </div>
         </div>
       </div>
 

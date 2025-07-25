@@ -25,3 +25,11 @@ body {
 }
 
 /* --- Your other global styles can go below this line --- */
+
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+  /* This tells form elements to use the font of their parent */
+}

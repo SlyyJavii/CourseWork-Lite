@@ -131,7 +131,7 @@
   gap: 12px;
   font-weight: 500;
   color: #444;
-  /* NEW: These properties are crucial for text truncation to work inside a flex container */
+  /* These properties are crucial for text truncation to work inside a flex container */
   flex-grow: 1;
   min-width: 0;
 }
@@ -246,11 +246,14 @@
 
 /* --- Task List --- */
 .task-list-container {
-  flex-grow: 1;
-  padding: 2rem;
+  padding: 0 2rem 2rem 2rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+}
+
+.task-list {
+  position: relative;
 }
 
 .task-list-main-header {
@@ -268,8 +271,7 @@
 
 .task-list-column-headers {
   display: grid;
-  /* NEW: Added a column for actions */
-  grid-template-columns: 3fr 1fr 1fr 80px; 
+  grid-template-columns: 2.5fr 1fr 1fr 1fr 80px; 
   gap: 1rem;
   padding: 0 1rem 0.5rem 1rem;
   border-bottom: 2px solid #e0e0e0;
@@ -283,10 +285,27 @@
   text-transform: uppercase;
 }
 
+.task-list-container {
+  padding: 0 2rem 2rem 2rem;
+  /* Adjusted padding */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Specific style for the larger "Add Task" button */
+.task-list-main-header .add-button {
+  border-radius: 8px;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
 .task-item {
   display: grid;
-  /* NEW: Align items with the new header columns */
-  grid-template-columns: 3fr 1fr 1fr 80px; 
+  grid-template-columns: 2.5fr 1fr 1fr 1fr 80px;
   gap: 1rem;
   align-items: center;
   background-color: #ffffff;
@@ -294,8 +313,13 @@
   border-radius: 8px;
   margin-bottom: 0.75rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  transition: box-shadow 0.2s, background-color 0.2s;
 }
+
+.completed-text {
+  text-decoration: line-through;
+  color: #888;
+}
+
 .task-main-info {
   display: flex;
   align-items: center;
@@ -312,12 +336,32 @@
   transition: color 0.2s;
 }
 
+.task-item.completed {
+  text-decoration: line-through;
+  color: #888;
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  border: none;
+  box-shadow: none;
+}
 .task-item.completed .task-title {
   text-decoration: line-through;
   color: #888;
 }
 .task-item.completed {
   background-color: #f9fafb;
+}
+
+.task-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Important for child scrolling */
 }
 
 .task-actions {
@@ -330,6 +374,22 @@
 }
 .task-item:hover .task-actions {
   opacity: 1;
+}
+
+.task-item-animation-exit {
+  opacity: 1;
+  max-height: 100px;
+  transform: scale(1);
+}
+
+.task-item-animation-exit-active {
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  transform: scale(0.95);
+  transition: all 500ms ease-in-out;
 }
 
 .add-button {
@@ -351,12 +411,127 @@
   /* Optical adjustment for the '+' sign */
 }
 
-/* Specific style for the larger "Add Task" button */
-.task-list-main-header .add-button {
-  border-radius: 8px;
-  width: auto;
-  height: auto;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
+/* --- Sortable Header Styles --- */
+.sortable-header {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.875rem;
   font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.sortable-header:hover {
+  color: #007bff;
+}
+
+.sort-icon {
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+/* --- Priority Styles */
+.task-priority {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  width: fit-content;
+}
+
+.priority-high {
+  background-color: #fde2e2;
+  color: #c53030;
+}
+
+.priority-medium {
+  background-color: #fefcbf;
+  color: #b7791f;
+}
+
+.priority-low {
+  background-color: #e6fffa;
+  color: #2c7a7b;
+}
+
+.reminders-container {
+  padding: 1rem 2rem 0 2rem;
+  /* Match task list padding */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reminder-section {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border-left-width: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.reminder-section::before {
+  font-family: 'Segoe UI Symbol', sans-serif;
+  /* Use a font that supports symbols */
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.reminder-section.overdue {
+  background-color: #fff5f5;
+  border-color: #e53e3e;
+}
+
+.reminder-section.overdue::before {
+  content: '❗';
+  /* Exclamation icon */
+  color: #c53030;
+}
+
+.reminder-section.due-soon {
+  background-color: #fffff0;
+  border-color: #dd6b20;
+}
+
+.reminder-section.due-soon::before {
+  content: '🕒';
+  /* Clock icon */
+  color: #b7791f;
+}
+
+.reminder-title {
+  margin: 0 0 0.25rem 0;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.reminder-section.overdue .reminder-title {
+  color: #c53030;
+}
+
+.reminder-section.due-soon .reminder-title {
+  color: #b7791f;
+}
+
+.reminder-section ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.reminder-section li {
+  padding: 0.1rem 0;
 }
