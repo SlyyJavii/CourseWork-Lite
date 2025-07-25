@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import '../styles/LoginPage.css';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -20,33 +21,39 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-          className="w-full px-4 py-2 border rounded-md"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password"
-          required
-          className="w-full px-4 py-2 border rounded-md"
-        />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600">
+    <div className="login-container">
+      <h2 className="login-title">Log In</h2>
+      <form onSubmit={handleSubmit} className="login-form">
+        <div className="form-group">
+          <label htmlFor="email">Email Address</label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••••••"
+            required
+          />
+        </div>
+        {error && <p className="error-message">{error}</p>}
+        <button type="submit" className="submit-button">
           Log In
         </button>
       </form>
-      <p className="text-center text-sm text-gray-600 mt-4">
+      <p className="form-footer">
         Don't have an account?{' '}
-        <a href="#/register" className="font-medium text-blue-600 hover:underline">
+        <a href="#/register">
           Sign up
         </a>
       </p>
