@@ -42,3 +42,6 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Ignore the VS Code workspace settings file, which may contain user-specific configurations.
+/frontend/.env.local
