@@ -4,18 +4,28 @@ from typing import List, Optional
 from bson import ObjectId
 from bson.errors import InvalidId
 from datetime import datetime
+from fastapi import Query
+from enum import Enum
 
 import auth
 from database import tasks_collection, courses_collection
 
 # --- Pydantic Models ---
+class PriorityEnum(str, Enum):
+    low = "low"
+    medium = "medium"
+    high = "high"
+
+class StatusEnum(str, Enum):
+    complete = "complete"
+    incomplete = "incomplete"
 
 class TaskBase(BaseModel):
     title: str = Field(..., min_length=3)
     description: Optional[str] = None
     dueDate: Optional[datetime] = None
-    priority: str = "Medium"
-    status: str = "active"
+    priority: PriorityEnum = PriorityEnum.medium
+    status: StatusEnum = StatusEnum.incomplete
 
 class TaskCreate(TaskBase):
     courseId: str
@@ -24,8 +34,8 @@ class TaskUpdate(BaseModel):
     title: Optional[str] = Field(None, min_length=3)
     description: Optional[str] = None
     dueDate: Optional[datetime] = None
-    priority: Optional[str] = None
-    status: Optional[str] = None
+    priority: Optional[PriorityEnum] = None
+    status: Optional[StatusEnum] = None
 
 class TaskResponse(TaskBase):
     id: str
@@ -96,18 +106,66 @@ async def create_task(task: TaskCreate, current_user: dict = Depends(auth.get_cu
 @router.get("/", response_model=List[TaskResponse])
 async def get_tasks(
     course_id: Optional[str] = None, # Optional query parameter to filter by course
+    status: Optional[str] = None,
+    priority: Optional[str] = None,
+    sort_by: Optional[str] = Query(None, description = "Field to sort by: dueDate, priority"),
+    sort_order: Optional[str] = Query("asc", regex ="^(asc|desc)$"),
+    skip: int = 0,
+    limit: int = 10,
     current_user: dict = Depends(auth.get_current_user)
 ):
     """Retrieves all tasks for the current user, with optional filtering by course."""
     query = {"userId": current_user["_id"]}
+
+    #filtering
     if course_id:
         try:
             query["courseId"] = ObjectId(course_id)
         except InvalidId:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid Course ID format")
+    
+    if status:
+        query["status"] = status
+    if priority:
+        query["priority"] = priority
+
+    #sorting
+    sort_direction = 1 if sort_order == "asc" else -1
+
+    if sort_by == "priority":
+        pipeline = [
+            {"$match":query},
+            {"$set": {
+                "priorityValue": {
+                    "$switch": {
+                        "branches": [
+                            {"case": {"$eq": ["$priority", "high"]}, "then": 3},
+                            {"case": {"$eq": ["$priority", "medium"]}, "then": 2},
+                            {"case": {"$eq": ["$priority", "low"]}, "then": 1},
+                        ],
+                        "default": 0
+                    }
+                }
+            }},
+            {"$sort": {"priorityValue": sort_direction}},
+            {"$skip": skip},
+            {"$limit": limit}
+        ]
+        tasks = list(tasks_collection.aggregate(pipeline))
+    else:
+        sort_fields = []
+        if sort_by == "dueDate":
+            sort_fields = [("dueDate", sort_direction), ("priority", -1)]
+
+        cursor = tasks_collection.find(query)
+
+        if sort_fields:
+            cursor = cursor.sort(sort_fields)
         
-    user_tasks = tasks_collection.find(query)
-    return [format_task(task) for task in user_tasks]
+        cursor = cursor.skip(skip).limit(limit)
+        tasks = list(cursor)
+        
+    return [format_task(task) for task in tasks]
 
 @router.get("/{task_id}", response_model=TaskResponse)
 async def get_single_task(task: dict = Depends(get_task_or_404)):
