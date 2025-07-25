@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Sidebar = ({ courses, selectedCourseId, onSelectCourse, onAddCourse }) => {
+const Sidebar = ({ courses, selectedCourseId, onSelectCourse, onAddCourse, onEditCourse, onDeleteCourse }) => {
     return (
         <aside className="sidebar">
             <nav>
@@ -15,9 +15,19 @@ const Sidebar = ({ courses, selectedCourseId, onSelectCourse, onAddCourse }) => 
                         All Tasks
                     </li>
                     {courses.map(course => (
-                        <li key={course.id} className={selectedCourseId === course.id ? 'active' : ''} onClick={() => onSelectCourse(course.id)}>
-                            <span className="course-color-tag" style={{ backgroundColor: course.colorTag || '#ccc' }}></span>
-                            {course.courseName}
+                        <li
+                            key={course.id}
+                            className={`course-list-item ${selectedCourseId === course.id ? 'active' : ''}`}
+                            onClick={() => onSelectCourse(course.id)}
+                        >
+                            <div className="course-info">
+                                <span className="course-color-tag" style={{ backgroundColor: course.colorTag || '#ccc' }}></span>
+                                <span className="course-name-text" title={course.courseName}>{course.courseName}</span>
+                            </div>
+                            <div className="course-actions">
+                                <button onClick={(e) => { e.stopPropagation(); onEditCourse(course); }} className="action-button edit-button" title="Edit Course">✏️</button>
+                                <button onClick={(e) => { e.stopPropagation(); onDeleteCourse(course.id); }} className="action-button delete-button" title="Delete Course">🗑️</button>
+                            </div>
                         </li>
                     ))}
                 </ul>
@@ -25,5 +35,4 @@ const Sidebar = ({ courses, selectedCourseId, onSelectCourse, onAddCourse }) => 
         </aside>
     );
 };
-
 export default Sidebar;

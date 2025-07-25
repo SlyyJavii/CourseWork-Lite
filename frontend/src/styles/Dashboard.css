@@ -15,7 +15,7 @@
   padding: 1rem 2rem;
   background-color: #ffffff;
   border-bottom: 1px solid #e0e0e0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .dashboard-header h1 {
@@ -47,7 +47,7 @@
 
 /* --- Sidebar --- */
 .sidebar {
-  width: 250px;
+  width: 300px;
   background-color: #ffffff;
   padding: 1.5rem;
   border-right: 1px solid #e0e0e0;
@@ -69,39 +69,43 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
-.sidebar nav {
-  flex-grow: 1;
-}
-
 .sidebar nav ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
-.sidebar nav li {
+/* Course List Item Styling */
+.course-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 0.75rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 500;
-  color: #444;
+  transition: background-color 0.2s;
+}
+.course-info {
   display: flex;
   align-items: center;
-  transition: background-color 0.2s, color 0.2s;
+  gap: 12px;
+  font-weight: 500;
+  color: #444;
+  /* NEW: These properties are crucial for text truncation to work inside a flex container */
+  flex-grow: 1;
+  min-width: 0;
 }
-
-.sidebar nav li:hover {
+.course-list-item:hover {
   background-color: #f0f4f8;
 }
-
-.sidebar nav li.active {
+.course-list-item.active {
   background-color: #007bff;
   color: white;
   font-weight: 600;
 }
-
+.course-list-item.active .course-info {
+  color: white;
+}
 .course-color-tag {
   width: 12px;
   height: 12px;
@@ -110,13 +114,47 @@
   flex-shrink: 0;
 }
 
+/* NEW: Styles to handle long course names */
+.course-name-text {
+  white-space: nowrap;      /* Prevents the text from wrapping */
+  overflow: hidden;         /* Hides the overflowing text */
+  text-overflow: ellipsis;  /* Adds the "..." */
+}
+
+/* --- Course Action Buttons --- */
+.course-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* Hide buttons by default */
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+.course-list-item:hover .course-actions {
+  /* Show buttons on hover */
+  opacity: 1;
+}
+.action-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem;
+  border-radius: 4px;
+}
+.action-button:hover {
+  background-color: rgba(0,0,0,0.1);
+}
+.course-list-item.active .action-button:hover {
+  background-color: rgba(255,255,255,0.2);
+}
+
+
 /* --- Task List --- */
 .task-list-container {
   flex-grow: 1;
   padding: 2rem;
   overflow-y: auto;
-  display: flex;
-  flex-direction: column;
 }
 
 .task-list-main-header {
@@ -157,43 +195,7 @@
   padding: 1rem;
   border-radius: 8px;
   margin-bottom: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  transition: box-shadow 0.2s, transform 0.2s;
-}
-
-.task-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.task-title {
-  font-weight: 600;
-  color: #333;
-}
-
-.task-due-date {
-  font-weight: 500;
-  color: #555;
-  font-size: 0.9rem;
-}
-
-.task-course-name {
-  font-size: 0.9rem;
-  color: #777;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.empty-state {
-  text-align: center;
-  padding: 4rem;
-  color: #888;
-}
-
-.empty-state h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
 /* --- Shared "Add" Button Styles --- */
@@ -208,20 +210,16 @@
   cursor: pointer;
   transition: background-color 0.2s, transform 0.2s;
   flex-shrink: 0;
-  /* Flexbox properties for perfect centering */
   display: flex;
   align-items: center;
   justify-content: center;
   padding-bottom: 2px;
-  /* Optical adjustment for the '+' sign */
 }
 
 .add-button:hover {
   background-color: #0056b3;
   transform: scale(1.1);
 }
-
-/* Specific style for the larger "Add Task" button */
 .task-list-main-header .add-button {
   border-radius: 8px;
   width: auto;
