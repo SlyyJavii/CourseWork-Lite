@@ -131,7 +131,7 @@
   gap: 12px;
   font-weight: 500;
   color: #444;
-  /* NEW: These properties are crucial for text truncation to work inside a flex container */
+  /* These properties are crucial for text truncation to work inside a flex container */
   flex-grow: 1;
   min-width: 0;
 }
@@ -253,6 +253,10 @@
   flex-direction: column;
 }
 
+.task-list {
+  position: relative;
+}
+
 .task-list-main-header {
   display: flex;
   justify-content: space-between;
@@ -294,9 +298,13 @@
   border-radius: 8px;
   margin-bottom: 0.75rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  transition: opacity 0.5s ease, max-height 0.5s ease, padding 0.5s ease, margin 0.5s ease;
-  max-height: 100px;
 }
+
+.completed-text {
+  text-decoration: line-through;
+  color: #888;
+}
+
 .task-main-info {
   display: flex;
   align-items: center;
@@ -343,6 +351,22 @@
 }
 .task-item:hover .task-actions {
   opacity: 1;
+}
+
+.task-item-animation-exit {
+  opacity: 1;
+  max-height: 100px;
+  transform: scale(1);
+}
+
+.task-item-animation-exit-active {
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  transform: scale(0.95);
+  transition: all 500ms ease-in-out;
 }
 
 .add-button {
