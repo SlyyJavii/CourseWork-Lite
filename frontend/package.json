@@ -4,7 +4,9 @@
   "description": "This folder contains the foundational structure for the CourseWork Lite frontend.",
   "main": "index.js",
   "scripts": {
-    "dev": "vite"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "keywords": [],
   "author": "",
