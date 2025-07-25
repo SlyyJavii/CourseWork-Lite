@@ -246,8 +246,7 @@
 
 /* --- Task List --- */
 .task-list-container {
-  flex-grow: 1;
-  padding: 2rem;
+  padding: 0 2rem 2rem 2rem;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -284,6 +283,24 @@
   font-weight: 600;
   color: #666;
   text-transform: uppercase;
+}
+
+.task-list-container {
+  padding: 0 2rem 2rem 2rem;
+  /* Adjusted padding */
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Specific style for the larger "Add Task" button */
+.task-list-main-header .add-button {
+  border-radius: 8px;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .task-item {
@@ -339,6 +356,14 @@
   background-color: #f9fafb;
 }
 
+.task-area {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  /* Important for child scrolling */
+}
+
 .task-actions {
   display: flex;
   align-items: center;
@@ -384,16 +409,6 @@
   justify-content: center;
   padding-bottom: 2px;
   /* Optical adjustment for the '+' sign */
-}
-
-/* Specific style for the larger "Add Task" button */
-.task-list-main-header .add-button {
-  border-radius: 8px;
-  width: auto;
-  height: auto;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 600;
 }
 
 /* --- Sortable Header Styles --- */
@@ -445,4 +460,78 @@
 .priority-low {
   background-color: #e6fffa;
   color: #2c7a7b;
+}
+
+.reminders-container {
+  padding: 1rem 2rem 0 2rem;
+  /* Match task list padding */
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.reminder-section {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  border-left-width: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.reminder-section::before {
+  font-family: 'Segoe UI Symbol', sans-serif;
+  /* Use a font that supports symbols */
+  font-size: 1.5rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.reminder-section.overdue {
+  background-color: #fff5f5;
+  border-color: #e53e3e;
+}
+
+.reminder-section.overdue::before {
+  content: '❗';
+  /* Exclamation icon */
+  color: #c53030;
+}
+
+.reminder-section.due-soon {
+  background-color: #fffff0;
+  border-color: #dd6b20;
+}
+
+.reminder-section.due-soon::before {
+  content: '🕒';
+  /* Clock icon */
+  color: #b7791f;
+}
+
+.reminder-title {
+  margin: 0 0 0.25rem 0;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.reminder-section.overdue .reminder-title {
+  color: #c53030;
+}
+
+.reminder-section.due-soon .reminder-title {
+  color: #b7791f;
+}
+
+.reminder-section ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  font-size: 0.9rem;
+  color: #4a5568;
+}
+
+.reminder-section li {
+  padding: 0.1rem 0;
 }

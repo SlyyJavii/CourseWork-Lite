@@ -12,19 +12,20 @@ import AddCourseModal from '../components/AddCourseModal';
 import AddTaskModal from '../components/AddTaskModal';
 import EditCourseModal from '../components/EditCourseModal';
 import EditTaskModal from '../components/EditTaskModal';
+import Reminders from '../components/Reminders';
 
 // Importing styles specific to the Dashboard component.
 // This CSS file contains styles for the dashboard layout, header, and other elements.  
 import '../styles/Dashboard.css';
 
 const Dashboard = () => {
+  // State variables for managing courses, tasks, and UI state.
   const { logout } = useAuth(); // Assuming useAuth is imported
   const [courses, setCourses] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [selectedCourseId, setSelectedCourseId] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-
   const [showArchived, setShowArchived] = useState(false);
   const [sortConfig,setSortConfig] = useState({key: 'title',direction: 'ascending'});
 
@@ -50,6 +51,7 @@ const Dashboard = () => {
         setCourses(coursesResponse.data);
         setTasks(tasksResponse.data);
       } catch (err) {
+        console.error('Error fetching dashboard data:', err);
         setError('Failed to load dashboard data.');
       } finally {
         setLoading(false);
@@ -57,6 +59,30 @@ const Dashboard = () => {
     };
     fetchData();
   }, []); // The empty dependency array [] means this effect runs only once.
+
+  // --- Dynamic Reminder Calculation ---
+  // We use useMemo to derive the reminder tasks from the main tasks state.
+  // This logic will automatically re-run whenever the `tasks` array changes.
+  const reminderTasks = useMemo(() => {
+    const now = new Date();
+    const twentyFourHoursFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+
+    const overdue = [];
+    const dueSoon = [];
+
+    tasks.forEach(task => {
+      if (task.status === 'active' && task.dueDate) {
+        const dueDate = new Date(task.dueDate);
+        if (dueDate < now) {
+          overdue.push(task);
+        } else if (dueDate <= twentyFourHoursFromNow) {
+          dueSoon.push(task);
+        }
+      }
+    });
+
+    return { overdue, dueSoon };
+  }, [tasks]); // The dependency array ensures this runs when `tasks` is updated.
 
   // Handlers for adding, editing, and deleting courses and tasks.
   // These functions update the state and handle the logic for adding, editing, and deleting courses
@@ -135,18 +161,10 @@ const Dashboard = () => {
   // showArchived, or sortConfig changes.
   // This prevents unnecessary recalculations on every render, improving performance.
   const sortedAndFilteredTasks = useMemo(() => {
-    // 1. Filter tasks by archive status and selected course first.
     let filtered = tasks
-      .filter(task => {
-        const desiredStatus = showArchived ? 'complete' : 'active';
-        return task.status === desiredStatus;
-      })
-      .filter(task => {
-        if (selectedCourseId === 'all') return true;
-        return task.courseId === selectedCourseId;
-      });
+      .filter(task => (showArchived ? task.status === 'complete' : task.status === 'active'))
+      .filter(task => selectedCourseId === 'all' || task.courseId === selectedCourseId);
 
-    // 2. Sort the filtered tasks.
     const sorted = [...filtered].sort((a, b) => {
       let aValue = a[sortConfig.key];
       let bValue = b[sortConfig.key];
@@ -170,7 +188,6 @@ const Dashboard = () => {
       }
       return 0;
     });
-
     return sorted;
   }, [tasks, selectedCourseId, showArchived, sortConfig]);
 
@@ -203,7 +220,9 @@ const Dashboard = () => {
             showArchived={showArchived}
             onToggleArchived={() => setShowArchived(!showArchived)}
           />
-          <TaskList
+          <div className="task-area">
+            <Reminders tasks={reminderTasks} />
+            <TaskList
             tasks={sortedAndFilteredTasks}
             courses={courses}
             onAddTask={() => setIsAddTaskModalOpen(true)}
@@ -213,6 +232,7 @@ const Dashboard = () => {
             sortConfig={sortConfig}
             onSort={handleSort}
           />
+          </div>
         </div>
       </div>
 
