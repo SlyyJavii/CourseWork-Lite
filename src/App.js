@@ -1,13 +1,32 @@
-import './App.css';
+import React, { useState } from 'react';
+import LoginForm from './components/LoginForm';
 import CourseList from './components/CourseList';
 
-function App() {
+const App = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return !!localStorage.getItem('token');
+  });
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+  };
+
+  if (!isLoggedIn) {
+    return <LoginForm onLoginSuccess={handleLoginSuccess} />;
+  }
+
   return (
-    <div className="App">
-      <h1>Welcome to CourseWork Lite</h1>
-      <CourseList /> {/* Render it here */}
-      </div>
+    <div>
+      <h1>CourseWork Lite</h1>
+      <button onClick={handleLogout}>Log Out</button>
+      <CourseList />
+    </div>
   );
-}
+};
 
 export default App;
