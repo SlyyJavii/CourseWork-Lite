@@ -1,0 +1,27 @@
+/*
+  1. A modern CSS Reset to remove default browser styles.
+  This provides a consistent base for styling across all browsers.
+*/
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+/*
+  2. Ensure the root element for the React app fills the body.
+*/
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+/* --- Your other global styles can go below this line --- */

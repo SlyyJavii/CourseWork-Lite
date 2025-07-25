@@ -1,33 +1,55 @@
 import React from 'react';
 
-const Sidebar = ({ courses, selectedCourseId, onSelectCourse }) => {
+const Sidebar = ({ courses, selectedCourseId, onSelectCourse, onAddCourse, onEditCourse, onDeleteCourse }) => {
+  // We will add state for the toggle later when we implement the feature.
+  // For now, it's just a visual placeholder.
+  // const [showArchived, setShowArchived] = useState(false);
+
     return (
         <aside className="sidebar">
             <nav>
-                <h2 className="sidebar-title">Courses</h2>
+                <div className="sidebar-header">
+                    <h2 className="sidebar-title">Courses</h2>
+                    <button onClick={onAddCourse} className="add-button" title="Add New Course">
+                        +
+                    </button>
+                </div>
                 <ul>
-                    {/* "All Tasks" filter option */}
-                    <li
-                        className={selectedCourseId === 'all' ? 'active' : ''}
-                        onClick={() => onSelectCourse('all')}
-                    >
-                        All Tasks
+          <li
+            className={`course-list-item ${selectedCourseId === 'all' ? 'active' : ''}`}
+            onClick={() => onSelectCourse('all')}
+          >
+            <div className="course-info">
+              <span className="course-color-tag all-tasks-icon"></span>
+              <span className="course-name-text">All Tasks</span>
+            </div>
                     </li>
-                    {/* List of courses from the API */}
                     {courses.map(course => (
                         <li
                             key={course.id}
-                            className={selectedCourseId === course.id ? 'active' : ''}
+                            className={`course-list-item ${selectedCourseId === course.id ? 'active' : ''}`}
                             onClick={() => onSelectCourse(course.id)}
                         >
-                            <span className="course-color-tag" style={{ backgroundColor: course.colorTag || '#ccc' }}></span>
-                            {course.courseName}
+                            <div className="course-info">
+                                <span className="course-color-tag" style={{ backgroundColor: course.colorTag || '#ccc' }}></span>
+                                <span className="course-name-text" title={course.courseName}>{course.courseName}</span>
+                            </div>
+                            <div className="course-actions">
+                                <button onClick={(e) => { e.stopPropagation(); onEditCourse(course); }} className="action-button edit-button" title="Edit Course">✏️</button>
+                                <button onClick={(e) => { e.stopPropagation(); onDeleteCourse(course.id); }} className="action-button delete-button" title="Delete Course">🗑️</button>
+                            </div>
                         </li>
                     ))}
                 </ul>
             </nav>
+      <div className="sidebar-footer">
+        <label className="archive-toggle">
+          <input type="checkbox" />
+          <span className="slider"></span>
+          <span className="toggle-label">Show Archived</span>
+        </label>
+      </div>
         </aside>
     );
 };
-
 export default Sidebar;
