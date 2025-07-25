@@ -4,7 +4,7 @@
 
 # Dependencies
 # Ignore the node_modules directory, where all third-party packages are installed.
-/node_modules
+frontend/node_modules
 
 # Build artifacts
 # Ignore build output directories commonly used by React and Node.js.
@@ -42,3 +42,6 @@ Thumbs.db
 *.njsproj
 *.sln
 *.sw?
+
+# Ignore the VS Code workspace settings file, which may contain user-specific configurations.
+/frontend/.env.local

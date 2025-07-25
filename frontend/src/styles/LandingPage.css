@@ -1,0 +1,66 @@
+.landing-container {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.landing-title {
+    font-size: 2.5rem;
+    /* 40px */
+    font-weight: 700;
+    color: #1f2937;
+    /* Dark gray */
+    margin-bottom: 1rem;
+}
+
+.landing-subtitle {
+    font-size: 1.25rem;
+    /* 20px */
+    color: #4b5563;
+    /* Medium gray */
+    margin-bottom: 2.5rem;
+}
+
+.landing-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    /* Space between buttons */
+}
+
+.button {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    /* 12px 32px */
+    border-radius: 0.5rem;
+    /* 8px */
+    font-weight: 600;
+    text-decoration: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.button:hover {
+    transform: translateY(-2px); /* Lift effect */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.button-primary {
+    background-color: #007bff;
+    /* Blue */
+    color: white;
+}
+
+.button-primary:hover {
+    background-color: #0056b3;
+}
+
+.button-secondary {
+    background-color: #6c757d;
+    /* Gray */
+    color: white;
+}
+
+.button-secondary:hover {
+    background-color: #5a6268;
+}

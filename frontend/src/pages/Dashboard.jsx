@@ -1,59 +1,74 @@
-import React, { useEffect, useState } from "react";
-import "../styles/Dashboard.css";
-
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext';
+import apiClient from '../api/axios';
+import Sidebar from '../components/Sidebar';
+import TaskList from '../components/TaskList';
+import '../styles/Dashboard.css';
 
 const Dashboard = () => {
+  const { logout } = useAuth();
+  const [courses, setCourses] = useState([]);
   const [tasks, setTasks] = useState([]);
-  const [filter, setFilter] = useState("all");
+  const [selectedCourseId, setSelectedCourseId] = useState('all'); // 'all' by default
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
+  // This useEffect hook is the core of our data fetching.
+  // It runs once when the component first mounts.
   useEffect(() => {
-    // TODO: Replace with actual API fetch
-    const fetchTasks = async () => {
-      const dummyTasks = [
-        { id: 1, title: "Submit Assignment", completed: false },
-        { id: 2, title: "Grade Submissions", completed: true },
-        { id: 3, title: "Update Syllabus", completed: false },
-      ];
-      setTasks(dummyTasks);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // We use Promise.all to make both API calls concurrently for better performance.
+        const [coursesResponse, tasksResponse] = await Promise.all([
+          apiClient.get('/courses/'),
+          apiClient.get('/tasks/'),
+        ]);
+
+        setCourses(coursesResponse.data);
+        setTasks(tasksResponse.data);
+        setError('');
+      } catch (err) {
+        console.error("Failed to fetch data:", err);
+        setError('Failed to load dashboard data. Please try again later.');
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchTasks();
-  }, []);
+    fetchData();
+  }, []); // The empty dependency array [] means this effect runs only once.
 
-  const filteredTasks = tasks.filter((task) => {
-    if (filter === "all") return true;
-    return filter === "completed" ? task.completed : !task.completed;
-  });
+  // This derived state filters the tasks based on the selected course.
+  // This logic runs every time 'tasks' or 'selectedCourseId' changes.
+  const filteredTasks = selectedCourseId === 'all'
+    ? tasks
+    : tasks.filter(task => task.courseId === selectedCourseId);
+
+  if (loading) {
+    return <div className="loading-message">Loading your dashboard...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">{error}</div>;
+  }
 
   return (
-    <div className="dashboard-container">
-      <h2>Dashboard</h2>
-
-      <div className="filter-buttons">
-        <button onClick={() => setFilter("all")} className={filter === "all" ? "active" : ""}>
-          All
+    <div className="dashboard-layout">
+      <header className="dashboard-header">
+        <h1>My Dashboard</h1>
+        <button onClick={logout} className="logout-button">
+          Logout
         </button>
-        <button
-          onClick={() => setFilter("completed")}
-          className={filter === "completed" ? "active" : ""}
-        >
-          Completed
-        </button>
-        <button
-          onClick={() => setFilter("pending")}
-          className={filter === "pending" ? "active" : ""}
-        >
-          Pending
-        </button>
+      </header>
+      <div className="dashboard-main-content">
+        <Sidebar
+          courses={courses}
+          selectedCourseId={selectedCourseId}
+          onSelectCourse={setSelectedCourseId}
+        />
+        <TaskList tasks={filteredTasks} courses={courses} />
       </div>
-
-      <ul className="task-list">
-        {filteredTasks.map((task) => (
-          <li key={task.id} className={task.completed ? "done" : ""}>
-            {task.title}
-          </li>
-        ))}
-      </ul>
     </div>
   );
 };
