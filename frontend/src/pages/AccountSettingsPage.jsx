@@ -4,7 +4,7 @@ import apiClient from '../api/axios';
 import '../styles/AccountSettingsPage.css';
 
 const AccountSettingsPage = () => {
-    const { user } = useAuth(); // We'll need the user's email for display
+    const { user,logout } = useAuth();
 
     // State for the email change form
     const [newEmail, setNewEmail] = useState('');
@@ -27,9 +27,9 @@ const AccountSettingsPage = () => {
                 password: emailPassword,
             });
             setEmailMessage({ type: 'success', text: 'Email updated successfully! Please log in again with your new email.' });
-            // In a real app, you might force a logout here.
-            setNewEmail('');
-            setEmailPassword('');
+            setTimeout(() => {
+                logout();
+            }, 2500);
         } catch (err) {
             setEmailMessage({ type: 'error', text: err.response?.data?.detail || 'Failed to update email.' });
         }
@@ -49,10 +49,10 @@ const AccountSettingsPage = () => {
                 current_password: currentPassword,
                 new_password: newPassword,
             });
-            setPasswordMessage({ type: 'success', text: 'Password updated successfully!' });
-            setCurrentPassword('');
-            setNewPassword('');
-            setConfirmPassword('');
+            setPasswordMessage({ type: 'success', text: 'Password updated successfully! Please log in again with your new password.' });
+            setTimeout(() => {
+                logout();
+            }, 2500);
         } catch (err) {
             setPasswordMessage({ type: 'error', text: err.response?.data?.detail || 'Failed to update password.' });
         }
