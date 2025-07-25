@@ -12,7 +12,7 @@ const LoginForm = ({ onLoginSuccess }) => {
     setLoading(true);
 
     try {
-      const res = await fetch('/users/login', {  // relative URL, uses proxy
+        const res = await fetch('https://coursework-lite.onrender.com/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
