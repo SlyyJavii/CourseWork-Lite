@@ -25,6 +25,9 @@ const SimpleRouter = () => {
     if (user && publicRoutes.includes(route)) {
       window.location.hash = '/dashboard';
     }
+    if (!user && route === '#/dashboard') {
+      window.location.hash = '/login';
+    }
   }, [user, route]);
 
 
@@ -36,18 +39,14 @@ const SimpleRouter = () => {
     case '#/dashboard':
       return <ProtectedRoute><Dashboard /></ProtectedRoute>;
     default:
-      return <LandingPage />;
+      return user ? <ProtectedRoute><Dashboard /></ProtectedRoute> : <LandingPage />;
   }
 };
 
 export default function App() {
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
-          <SimpleRouter />
-        </div>
-      </div>
+      <SimpleRouter />
     </AuthProvider>
   );
 }
