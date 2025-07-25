@@ -26,6 +26,30 @@
   color: #333;
 }
 
+.account-button,
+.logout-button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+  color: white;
+  text-decoration: none;
+  /* For the <a> tag */
+  display: inline-block;
+  /* For the <a> tag */
+}
+
+.account-button {
+  background-color: #6c757d;
+  /* Neutral gray */
+}
+
+.account-button:hover {
+  background-color: #5a6268;
+}
+
 .logout-button {
   padding: 0.5rem 1rem;
   background-color: #dc3545;

@@ -207,6 +207,7 @@ const Dashboard = () => {
       <div className="dashboard-layout">
         <header className="dashboard-header">
           <h1>My Dashboard</h1>
+          <a href="#/account" className="account-button">Account</a>
           <button onClick={logout} className="logout-button">Logout</button>
         </header>
         <div className="dashboard-main-content">

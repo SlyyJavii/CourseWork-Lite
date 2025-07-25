@@ -7,6 +7,7 @@ import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
+import AccountSettingsPage from './pages/AccountSettingsPage';
 
 const SimpleRouter = () => {
   const [route, setRoute] = useState(window.location.hash || '#/');
@@ -38,6 +39,8 @@ const SimpleRouter = () => {
       return <RegisterPage />;
     case '#/dashboard':
       return <ProtectedRoute><Dashboard /></ProtectedRoute>;
+    case '#/account':
+      return <ProtectedRoute><AccountSettingsPage /></ProtectedRoute>;
     default:
       return user ? <ProtectedRoute><Dashboard /></ProtectedRoute> : <LandingPage />;
   }
