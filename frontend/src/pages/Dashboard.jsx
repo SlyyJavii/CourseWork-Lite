@@ -21,8 +21,8 @@ const Dashboard = () => {
         setLoading(true);
         // We use Promise.all to make both API calls concurrently for better performance.
         const [coursesResponse, tasksResponse] = await Promise.all([
-          apiClient.get('/courses'),
-          apiClient.get('/tasks'),
+          apiClient.get('/courses/'),
+          apiClient.get('/tasks/'),
         ]);
 
         setCourses(coursesResponse.data);
