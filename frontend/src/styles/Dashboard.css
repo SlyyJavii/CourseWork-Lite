@@ -1,11 +1,12 @@
 /* --- Main Layout --- */
 .dashboard-layout {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: #f7f9fc;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow: hidden;
 }
 
 .dashboard-header {
@@ -16,6 +17,7 @@
   background-color: #ffffff;
   border-bottom: 1px solid #e0e0e0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  flex-shrink: 0;
 }
 
 .dashboard-header h1 {
@@ -53,6 +55,7 @@
   border-right: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
 }
 
 .sidebar-header {
@@ -60,6 +63,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  flex-shrink: 0;
 }
 
 .sidebar-title {
@@ -69,11 +73,47 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+.sidebar nav {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
 .sidebar nav ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
+
+.sidebar nav li {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #444;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar nav li:hover {
+  background-color: #f0f4f8;
+}
+
+.sidebar nav li.active {
+  background-color: #007bff;
+  color: white;
+  font-weight: 600;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  /* Pushes the footer to the bottom */
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+  flex-shrink: 0;
+}
+
 /* Course List Item Styling */
 .course-list-item {
   display: flex;
@@ -149,6 +189,60 @@
   background-color: rgba(255,255,255,0.2);
 }
 
+.all-tasks-icon {
+  background-color: #6c757d;
+  /* Neutral gray */
+}
+
+.archive-toggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #555;
+  font-weight: 500;
+}
+
+.archive-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.archive-toggle .toggle-label {
+  margin-left: 0.75rem;
+}
+
+.slider {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  background-color: #ccc;
+  border-radius: 22px;
+  transition: background-color 0.2s;
+}
+
+.slider::before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.archive-toggle input:checked+.slider {
+  background-color: #28a745;
+  /* Green when active */
+}
+
+.archive-toggle input:checked+.slider::before {
+  transform: translateX(18px);
+}
 
 /* --- Task List --- */
 .task-list-container {
@@ -217,7 +311,7 @@
   color: #333;
   transition: color 0.2s;
 }
-/* NEW: Style for completed tasks */
+
 .task-item.completed .task-title {
   text-decoration: line-through;
   color: #888;
@@ -226,7 +320,6 @@
   background-color: #f9fafb;
 }
 
-/* NEW: Task Action Buttons (similar to course actions) */
 .task-actions {
   display: flex;
   align-items: center;
@@ -239,4 +332,31 @@
   opacity: 1;
 }
 
-/* ... (other styles remain the same) ... */
+.add-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  flex-shrink: 0;
+  /* Flexbox properties for perfect centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 2px;
+  /* Optical adjustment for the '+' sign */
+}
+
+/* Specific style for the larger "Add Task" button */
+.task-list-main-header .add-button {
+  border-radius: 8px;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}

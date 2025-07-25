@@ -1,6 +1,10 @@
 import React from 'react';
 
 const Sidebar = ({ courses, selectedCourseId, onSelectCourse, onAddCourse, onEditCourse, onDeleteCourse }) => {
+  // We will add state for the toggle later when we implement the feature.
+  // For now, it's just a visual placeholder.
+  // const [showArchived, setShowArchived] = useState(false);
+
     return (
         <aside className="sidebar">
             <nav>
@@ -11,8 +15,14 @@ const Sidebar = ({ courses, selectedCourseId, onSelectCourse, onAddCourse, onEdi
                     </button>
                 </div>
                 <ul>
-                    <li className={selectedCourseId === 'all' ? 'active' : ''} onClick={() => onSelectCourse('all')}>
-                        All Tasks
+          <li
+            className={`course-list-item ${selectedCourseId === 'all' ? 'active' : ''}`}
+            onClick={() => onSelectCourse('all')}
+          >
+            <div className="course-info">
+              <span className="course-color-tag all-tasks-icon"></span>
+              <span className="course-name-text">All Tasks</span>
+            </div>
                     </li>
                     {courses.map(course => (
                         <li
@@ -32,6 +42,13 @@ const Sidebar = ({ courses, selectedCourseId, onSelectCourse, onAddCourse, onEdi
                     ))}
                 </ul>
             </nav>
+      <div className="sidebar-footer">
+        <label className="archive-toggle">
+          <input type="checkbox" />
+          <span className="slider"></span>
+          <span className="toggle-label">Show Archived</span>
+        </label>
+      </div>
         </aside>
     );
 };
