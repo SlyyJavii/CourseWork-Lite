@@ -11,6 +11,7 @@ import TaskList from '../components/TaskList';
 import AddCourseModal from '../components/AddCourseModal';
 import AddTaskModal from '../components/AddTaskModal';
 import EditCourseModal from '../components/EditCourseModal';
+import EditTaskModal from '../components/EditTaskModal';
 
 // Importing styles specific to the Dashboard component.
 // This CSS file contains styles for the dashboard layout, header, and other elements.  
@@ -28,7 +29,9 @@ const Dashboard = () => {
   const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
   const [isEditCourseModalOpen, setIsEditCourseModalOpen] = useState(false);
-  const [courseToEdit, setCourseToEdit] = useState(null); // Track which course is being edited
+  const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
+  const [courseToEdit, setCourseToEdit] = useState(null);
+  const [taskToEdit, setTaskToEdit] = useState(null);
 
   // This useEffect hook is the core of our data fetching.
   // It runs once when the component first mounts.
@@ -44,8 +47,7 @@ const Dashboard = () => {
         setCourses(coursesResponse.data);
         setTasks(tasksResponse.data);
       } catch (err) {
-        console.error("Failed to fetch data:", err);
-        setError('Failed to load dashboard data. Please try again later.');
+        setError('Failed to load dashboard data.');
       } finally {
         setLoading(false);
       }
@@ -53,6 +55,8 @@ const Dashboard = () => {
     fetchData();
   }, []); // The empty dependency array [] means this effect runs only once.
 
+  // Handlers for adding, editing, and deleting courses and tasks.
+  // These functions update the state and handle the logic for adding, editing, and deleting courses
   const handleCourseAdded = (newCourse) => {
     setCourses(prevCourses => [...prevCourses, newCourse]);
   };
@@ -66,12 +70,21 @@ const Dashboard = () => {
     setIsEditCourseModalOpen(true);
   };
 
+  const handleEditTask = (task) => {
+    setTaskToEdit(task);
+    setIsEditTaskModalOpen(true);
+  };
+
   const handleCourseUpdated = (updatedCourse) => {
     setCourses(prevCourses =>
       prevCourses.map(course =>
         course.id === updatedCourse.id ? updatedCourse : course
       )
     );
+  };
+
+  const handleTaskUpdated = (updatedTask) => {
+    setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
   };
 
   const handleCourseDeleted = async (courseId) => {
@@ -92,6 +105,25 @@ const Dashboard = () => {
     }
   };
 
+  const handleTaskDeleted = async (taskId) => {
+     if (window.confirm("Are you sure you want to delete this task?")) {
+        try {
+            await apiClient.delete(`/tasks/${taskId}`);
+            setTasks(prev => prev.filter(t => t.id !== taskId));
+        } catch (err) {
+            setError("Failed to delete task.");
+        }
+     }
+  };
+
+  const handleTaskStatusChange = async (task, newStatus) => {
+    try {
+        const response = await apiClient.put(`/tasks/${task.id}`, { status: newStatus });
+        handleTaskUpdated(response.data);
+    } catch (err) {
+        setError("Failed to update task status.");
+    }
+  };
 
   const filteredTasks = selectedCourseId === 'all'
     ? tasks
@@ -120,6 +152,9 @@ const Dashboard = () => {
             tasks={filteredTasks}
             courses={courses}
             onAddTask={() => setIsAddTaskModalOpen(true)}
+            onEditTask={handleEditTask}
+            onDeleteTask={handleTaskDeleted}
+            onTaskStatusChange={handleTaskStatusChange}
           />
         </div>
       </div>
@@ -144,6 +179,14 @@ const Dashboard = () => {
           course={courseToEdit}
           onClose={() => setIsEditCourseModalOpen(false)}
           onCourseUpdated={handleCourseUpdated}
+        />
+      )}
+      {isEditTaskModalOpen && (
+        <EditTaskModal 
+          task={taskToEdit} 
+          courses={courses} 
+          onClose={() => setIsEditTaskModalOpen(false)} 
+          onTaskUpdated={handleTaskUpdated} 
         />
       )}
     </>

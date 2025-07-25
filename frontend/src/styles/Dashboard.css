@@ -114,7 +114,7 @@
   flex-shrink: 0;
 }
 
-/* NEW: Styles to handle long course names */
+/* Styles to handle long course names */
 .course-name-text {
   white-space: nowrap;      /* Prevents the text from wrapping */
   overflow: hidden;         /* Hides the overflowing text */
@@ -155,6 +155,8 @@
   flex-grow: 1;
   padding: 2rem;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .task-list-main-header {
@@ -172,7 +174,8 @@
 
 .task-list-column-headers {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  /* NEW: Added a column for actions */
+  grid-template-columns: 3fr 1fr 1fr 80px; 
   gap: 1rem;
   padding: 0 1rem 0.5rem 1rem;
   border-bottom: 2px solid #e0e0e0;
@@ -188,43 +191,52 @@
 
 .task-item {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  /* NEW: Align items with the new header columns */
+  grid-template-columns: 3fr 1fr 1fr 80px; 
   gap: 1rem;
   align-items: center;
   background-color: #ffffff;
-  padding: 1rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
   margin-bottom: 0.75rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  transition: box-shadow 0.2s, background-color 0.2s;
 }
-
-/* --- Shared "Add" Button Styles --- */
-.add-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  font-size: 1.5rem;
-  cursor: pointer;
-  transition: background-color 0.2s, transform 0.2s;
-  flex-shrink: 0;
+.task-main-info {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding-bottom: 2px;
+  gap: 1rem;
+}
+.task-checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+.task-title {
+  font-weight: 600;
+  color: #333;
+  transition: color 0.2s;
+}
+/* NEW: Style for completed tasks */
+.task-item.completed .task-title {
+  text-decoration: line-through;
+  color: #888;
+}
+.task-item.completed {
+  background-color: #f9fafb;
 }
 
-.add-button:hover {
-  background-color: #0056b3;
-  transform: scale(1.1);
+/* NEW: Task Action Buttons (similar to course actions) */
+.task-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
 }
-.task-list-main-header .add-button {
-  border-radius: 8px;
-  width: auto;
-  height: auto;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  font-weight: 600;
+.task-item:hover .task-actions {
+  opacity: 1;
 }
+
+/* ... (other styles remain the same) ... */
