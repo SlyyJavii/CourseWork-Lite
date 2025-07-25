@@ -1,49 +1,53 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Course from "./pages/Course";
-import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile";
-import Task from "./pages/Task";
+// Import your page components
+import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import Dashboard from './pages/Dashboard';
 
-// CSS imports for all pages
-import "./styles/Course.css";
-import "./styles/Dashboard.css";
-import "./styles/Login.css";
-import "./styles/Profile.css";
-import "./styles/Register.css";
-import "./styles/Task.css";
+const SimpleRouter = () => {
+  const [route, setRoute] = useState(window.location.hash || '#/');
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setRoute(window.location.hash || '#/');
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+  
+  useEffect(() => {
+    const publicRoutes = ['#/', '#/login', '#/register'];
+    if (user && publicRoutes.includes(route)) {
+      window.location.hash = '/dashboard';
+    }
+  }, [user, route]);
 
 
+  switch (route) {
+    case '#/login':
+      return <LoginPage />;
+    case '#/register':
+      return <RegisterPage />;
+    case '#/dashboard':
+      return <ProtectedRoute><Dashboard /></ProtectedRoute>;
+    default:
+      return <LandingPage />;
+  }
+};
 
-// Optional: If we plan to use the Navbar globally later
-// import Navbar from "./components/Navbar";
-
-// If we ever want to test auth stuff again, we still got these
-import { registerUser, loginUser } from "./api/auth";
-
-// Main app routes go through here
-function App() {
+export default function App() {
   return (
-    <Router>
-      <div style={{ padding: "2rem" }}>
-        <h1>CourseWork Lite</h1>
-        {/* We'll add <Navbar /> here eventually if needed */}
-        <Routes>
-          {/* Routing everything based on the path */}
-          <Route path="/" element={<Login />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/courses" element={<Course />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/task" element={<Task />} />
-        </Routes>
+    <AuthProvider>
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-2xl">
+          <SimpleRouter />
+        </div>
       </div>
-    </Router>
+    </AuthProvider>
   );
 }
-
-export default App;
