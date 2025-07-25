@@ -41,7 +41,7 @@
 }
 
 .button:hover {
-    transform: translateY(-10px); /* Lift effect */
+    transform: translateY(-2px); /* Lift effect */
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
