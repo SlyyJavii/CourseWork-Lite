@@ -5,9 +5,8 @@ import TaskList from './components/TaskList';
 import ReminderBanner from './components/ReminderBanner';
 
 const App = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return !!localStorage.getItem('token');
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('token'));
+  const [activeTab, setActiveTab] = useState('courses'); // can be: 'courses', 'tasks', 'archived'
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
@@ -18,20 +17,23 @@ const App = () => {
     setIsLoggedIn(false);
   };
 
-  if (!isLoggedIn) {
-    return <LoginForm onLoginSuccess={handleLoginSuccess} />;
-  }
+  if (!isLoggedIn) return <LoginForm onLoginSuccess={handleLoginSuccess} />;
 
   return (
-    <div>
+    <div style={{ padding: '1rem' }}>
       <h1>CourseWork Lite</h1>
-      <button onClick={handleLogout}>Log Out</button>
+      <div style={{ marginBottom: '1rem' }}>
+        <button onClick={() => setActiveTab('courses')}>Courses</button>
+        <button onClick={() => setActiveTab('tasks')}>Tasks</button>
+        <button onClick={() => setActiveTab('archived')}>Archived</button>
+        <button onClick={handleLogout} style={{ float: 'right' }}>Log Out</button>
+      </div>
 
       <ReminderBanner />
 
-      <CourseList />
-
-      <TaskList />
+      {activeTab === 'courses' && <CourseList />}
+      {activeTab === 'tasks' && <TaskList showArchived={false} />}
+      {activeTab === 'archived' && <TaskList showArchived={true} />}
     </div>
   );
 };
