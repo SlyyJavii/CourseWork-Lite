@@ -272,8 +272,7 @@
 
 .task-list-column-headers {
   display: grid;
-  /* NEW: Added a column for actions */
-  grid-template-columns: 3fr 1fr 1fr 80px; 
+  grid-template-columns: 2.5fr 1fr 1fr 1fr 80px; 
   gap: 1rem;
   padding: 0 1rem 0.5rem 1rem;
   border-bottom: 2px solid #e0e0e0;
@@ -289,8 +288,7 @@
 
 .task-item {
   display: grid;
-  /* NEW: Align items with the new header columns */
-  grid-template-columns: 3fr 1fr 1fr 80px; 
+  grid-template-columns: 2.5fr 1fr 1fr 1fr 80px;
   gap: 1rem;
   align-items: center;
   background-color: #ffffff;
@@ -396,4 +394,55 @@
   padding: 0.5rem 1rem;
   font-size: 0.9rem;
   font-weight: 600;
+}
+
+/* --- Sortable Header Styles --- */
+.sortable-header {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.sortable-header:hover {
+  color: #007bff;
+}
+
+.sort-icon {
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+/* --- Priority Styles */
+.task-priority {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-align: center;
+  width: fit-content;
+}
+
+.priority-high {
+  background-color: #fde2e2;
+  color: #c53030;
+}
+
+.priority-medium {
+  background-color: #fefcbf;
+  color: #b7791f;
+}
+
+.priority-low {
+  background-color: #e6fffa;
+  color: #2c7a7b;
 }

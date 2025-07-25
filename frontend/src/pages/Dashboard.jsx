@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import apiClient from '../api/axios';
 
@@ -26,6 +26,7 @@ const Dashboard = () => {
   const [error, setError] = useState('');
 
   const [showArchived, setShowArchived] = useState(false);
+  const [sortConfig,setSortConfig] = useState({key: 'title',direction: 'ascending'});
 
   // Manage state for modals
   const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
@@ -127,19 +128,59 @@ const Dashboard = () => {
     }
   };
 
-  const filteredTasks = tasks
-    .filter(task => {
-      // Step 1: Filter by completion status
-      const desiredStatus = showArchived ? 'complete' : 'active';
-      return task.status === desiredStatus;
-    })
-    .filter(task => {
-      // Step 2: Filter by the selected course
-      if (selectedCourseId === 'all') {
-        return true;
+
+  // --- Sorting and Filtering Logic ---
+  // This useMemo hook is used to optimize the sorting and filtering of tasks.
+  // It recalculates the sorted and filtered tasks only when tasks, selectedCourseId,
+  // showArchived, or sortConfig changes.
+  // This prevents unnecessary recalculations on every render, improving performance.
+  const sortedAndFilteredTasks = useMemo(() => {
+    // 1. Filter tasks by archive status and selected course first.
+    let filtered = tasks
+      .filter(task => {
+        const desiredStatus = showArchived ? 'complete' : 'active';
+        return task.status === desiredStatus;
+      })
+      .filter(task => {
+        if (selectedCourseId === 'all') return true;
+        return task.courseId === selectedCourseId;
+      });
+
+    // 2. Sort the filtered tasks.
+    const sorted = [...filtered].sort((a, b) => {
+      let aValue = a[sortConfig.key];
+      let bValue = b[sortConfig.key];
+
+      // Handle different data types for sorting
+      if (sortConfig.key === 'dueDate') {
+        aValue = a.dueDate ? new Date(a.dueDate) : new Date(0); // Handle null dates
+        bValue = b.dueDate ? new Date(b.dueDate) : new Date(0);
+      } else if (sortConfig.key === 'priority') {
+        const priorityMap = { 'Low': 1, 'Medium': 2, 'High': 3 };
+        aValue = priorityMap[a.priority] || 0;
+        bValue = priorityMap[b.priority] || 0;
       }
-      return task.courseId === selectedCourseId;
+
+      // Comparison logic
+      if (aValue < bValue) {
+        return sortConfig.direction === 'ascending' ? -1 : 1;
+      }
+      if (aValue > bValue) {
+        return sortConfig.direction === 'ascending' ? 1 : -1;
+      }
+      return 0;
     });
+
+    return sorted;
+  }, [tasks, selectedCourseId, showArchived, sortConfig]);
+
+  const handleSort = (key) => {
+    let direction = 'ascending';
+    if (sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
 
   if (loading) return <div className="loading-message">Loading dashboard...</div>;
   if (error) return <div className="error-message">{error}</div>;
@@ -163,12 +204,14 @@ const Dashboard = () => {
             onToggleArchived={() => setShowArchived(!showArchived)}
           />
           <TaskList
-            tasks={filteredTasks}
+            tasks={sortedAndFilteredTasks}
             courses={courses}
             onAddTask={() => setIsAddTaskModalOpen(true)}
             onEditTask={handleEditTask}
             onDeleteTask={handleTaskDeleted}
             onTaskStatusChange={handleTaskStatusChange}
+            sortConfig={sortConfig}
+            onSort={handleSort}
           />
         </div>
       </div>
