@@ -90,9 +90,15 @@
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
+/* --- Styles for the color picker --- */
 .form-group input[type="color"] {
     padding: 0.25rem;
-    height: 48px;
+    height: 40px;
+    /* Make it shorter */
+    width: 60px;
+    /* Make it narrower */
+    border-radius: 6px;
+    cursor: pointer;
 }
 
 .form-actions {

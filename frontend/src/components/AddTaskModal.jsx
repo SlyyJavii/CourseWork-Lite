@@ -2,9 +2,13 @@ import React, { useState } from 'react';
 import apiClient from '../api/axios';
 import '../styles/CreationForms.css';
 
-const AddTaskModal = ({ courses, onClose, onTaskAdded }) => {
+const AddTaskModal = ({ courses,selectedCourseId, onClose, onTaskAdded }) => {
     const [title, setTitle] = useState('');
-    const [courseId, setCourseId] = useState(courses.length > 0 ? courses[0].id : '');
+    const [courseId, setCourseId] = useState(
+        selectedCourseId !== 'all' && selectedCourseId ? selectedCourseId : (courses.length > 0 ? courses[0].id : '')
+    );
+    const [dueDate, setDueDate] = useState('');
+    const [priority, setPriority] = useState('medium'); // Default priority
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -17,7 +21,11 @@ const AddTaskModal = ({ courses, onClose, onTaskAdded }) => {
         setError('');
         setIsSubmitting(true);
         try {
-            const response = await apiClient.post('/tasks/', { title, courseId });
+            const payload = { title, courseId };
+            if (dueDate){
+                payload.dueDate = new Date(dueDate).toISOString(); // Convert to ISO string
+            };
+            const response = await apiClient.post('/tasks/', payload);
             onTaskAdded(response.data);
             onClose();
         } catch (err) {
@@ -50,6 +58,10 @@ const AddTaskModal = ({ courses, onClose, onTaskAdded }) => {
                                 ))
                             )}
                         </select>
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="dueDate">Due Date (Optional)</label>
+                        <input id="dueDate" type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} />
                     </div>
                     {error && <p className="error-message">{error}</p>}
                     <div className="form-actions">

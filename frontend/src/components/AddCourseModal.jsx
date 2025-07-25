@@ -2,10 +2,30 @@ import React, { useState } from 'react';
 import apiClient from '../api/axios';
 import '../styles/CreationForms.css';
 
+// --- NEW: Helper function to convert HSL to a Hex string ---
+const hslToHex = (h, s, l) => {
+    l /= 100;
+    const a = s * Math.min(l, 1 - l) / 100;
+    const f = n => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0');
+    };
+    return `#${f(0)}${f(8)}${f(4)}`;
+};
+
+// Function to generate random color tags
+const generateRandomPastelColor = () => {
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = 70;
+    const lightness = 85;
+    return hslToHex(hue,saturation,lightness);
+};
+
 const AddCourseModal = ({ onClose, onCourseAdded }) => {
     const [courseName, setCourseName] = useState('');
     const [courseCode, setCourseCode] = useState('');
-    const [colorTag, setColorTag] = useState('#4A90E2');
+    const [colorTag, setColorTag] = useState(generateRandomPastelColor);
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 

@@ -110,6 +110,8 @@ const Dashboard = () => {
       {isAddTaskModalOpen && (
         <AddTaskModal
           courses={courses}
+          // Pass the currently selected course ID to the modal
+          selectedCourseId={selectedCourseId}
           onClose={() => setIsAddTaskModalOpen(false)}
           onTaskAdded={handleTaskAdded}
         />
