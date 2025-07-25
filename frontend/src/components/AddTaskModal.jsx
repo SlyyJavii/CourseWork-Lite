@@ -8,7 +8,8 @@ const AddTaskModal = ({ courses,selectedCourseId, onClose, onTaskAdded }) => {
         selectedCourseId !== 'all' && selectedCourseId ? selectedCourseId : (courses.length > 0 ? courses[0].id : '')
     );
     const [dueDate, setDueDate] = useState('');
-    const [priority, setPriority] = useState('medium'); // Default priority
+    const [priority, setPriority] = useState('Low');
+    const [description, setDescription] = useState('');
     const [error, setError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -21,7 +22,12 @@ const AddTaskModal = ({ courses,selectedCourseId, onClose, onTaskAdded }) => {
         setError('');
         setIsSubmitting(true);
         try {
-            const payload = { title, courseId };
+            const payload = { 
+                title, 
+                courseId,
+                priority,
+                description
+            };
             if (dueDate){
                 payload.dueDate = new Date(dueDate).toISOString(); // Convert to ISO string
             };
@@ -48,6 +54,13 @@ const AddTaskModal = ({ courses,selectedCourseId, onClose, onTaskAdded }) => {
                         <input id="title" type="text" value={title} onChange={e => setTitle(e.target.value)} required />
                     </div>
                     <div className="form-group">
+                        <label htmlFor="description">Description (Optional)</label>
+                        <textarea
+                            id="description"
+                            value={description}
+                            onChange={e => setDescription(e.target.value)}
+                            rows="3"
+                        ></textarea>
                         <label htmlFor="courseId">Course</label>
                         <select id="courseId" value={courseId} onChange={e => setCourseId(e.target.value)} required>
                             {courses.length === 0 ? (
@@ -62,6 +75,14 @@ const AddTaskModal = ({ courses,selectedCourseId, onClose, onTaskAdded }) => {
                     <div className="form-group">
                         <label htmlFor="dueDate">Due Date (Optional)</label>
                         <input id="dueDate" type="date" value={dueDate} onChange={e => setDueDate(e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="priority">Priority</label>
+                        <select id="priority" value={priority} onChange={e => setPriority(e.target.value)}>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
                     </div>
                     {error && <p className="error-message">{error}</p>}
                     <div className="form-actions">
