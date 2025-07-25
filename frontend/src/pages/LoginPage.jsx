@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import '../styles/LoginPage.css';
+import '../styles/AuthForm.css';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -21,9 +21,9 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2 className="login-title">Log In</h2>
-      <form onSubmit={handleSubmit} className="login-form">
+    <div className="auth-container">
+      <h2 className="auth-title">Log In</h2>
+      <form onSubmit={handleSubmit} className="auth-form">
         <div className="form-group">
           <label htmlFor="email">Email Address</label>
           <input
@@ -47,7 +47,7 @@ const LoginPage = () => {
           />
         </div>
         {error && <p className="error-message">{error}</p>}
-        <button type="submit" className="submit-button">
+        <button type="submit" className="submit-button login-button">
           Log In
         </button>
       </form>

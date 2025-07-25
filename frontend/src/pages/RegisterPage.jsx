@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import '../styles/AuthForm.css';
 
 const RegisterPage = () => {
   const [username, setUsername] = useState('');
@@ -25,42 +26,51 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto">
-      <h2 className="text-2xl font-bold text-center mb-4">Create an Account</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          placeholder="Username"
-          required
-          className="w-full px-4 py-2 border rounded-md"
-        />
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
-          required
-          className="w-full px-4 py-2 border rounded-md"
-        />
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password (min 8 characters)"
-          required
-          className="w-full px-4 py-2 border rounded-md"
-        />
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        {success && <p className="text-green-500 text-sm">{success}</p>}
-        <button type="submit" className="w-full bg-green-500 text-white py-2 rounded-md hover:bg-green-600">
-          Register
+    <div className="auth-container">
+      <h2 className="auth-title">Create an Account</h2>
+      <form onSubmit={handleSubmit} className="auth-form">
+        <div className="form-group">
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Your Name"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="email">Email Address</label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Min. 8 characters"
+            required
+          />
+        </div>
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
+        <button type="submit" className="submit-button register-button">
+          Create Account
         </button>
       </form>
-      <p className="text-center text-sm text-gray-600 mt-4">
+      <p className="form-footer">
         Already have an account?{' '}
-        <a href="#/login" className="font-medium text-blue-600 hover:underline">
+        <a href="#/login">
           Log in
         </a>
       </p>
