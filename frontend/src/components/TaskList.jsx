@@ -6,7 +6,7 @@ const getCourseNameById = (courseId, courses) => {
 };
 
 const TaskItem = ({ task, courseName, onEditTask, onDeleteTask, onTaskStatusChange }) => {
-    const formattedDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : 'No date';
+    const formattedDate = task.dueDate ? new Date(task.dueDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) : 'No date';
     const isCompleted = task.status === 'complete';
 
     const handleCheckboxChange = () => {

@@ -25,6 +25,8 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const [showArchived, setShowArchived] = useState(false);
+
   // Manage state for modals
   const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
   const [isAddTaskModalOpen, setIsAddTaskModalOpen] = useState(false);
@@ -125,9 +127,19 @@ const Dashboard = () => {
     }
   };
 
-  const filteredTasks = selectedCourseId === 'all'
-    ? tasks
-    : tasks.filter(task => task.courseId === selectedCourseId);
+  const filteredTasks = tasks
+    .filter(task => {
+      // Step 1: Filter by completion status
+      const desiredStatus = showArchived ? 'complete' : 'active';
+      return task.status === desiredStatus;
+    })
+    .filter(task => {
+      // Step 2: Filter by the selected course
+      if (selectedCourseId === 'all') {
+        return true;
+      }
+      return task.courseId === selectedCourseId;
+    });
 
   if (loading) return <div className="loading-message">Loading dashboard...</div>;
   if (error) return <div className="error-message">{error}</div>;
@@ -147,6 +159,8 @@ const Dashboard = () => {
             onAddCourse={() => setIsAddCourseModalOpen(true)}
             onEditCourse={handleEditCourse}
             onDeleteCourse={handleCourseDeleted}
+            showArchived={showArchived}
+            onToggleArchived={() => setShowArchived(!showArchived)}
           />
           <TaskList
             tasks={filteredTasks}

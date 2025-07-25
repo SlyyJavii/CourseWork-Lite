@@ -294,7 +294,8 @@
   border-radius: 8px;
   margin-bottom: 0.75rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-  transition: box-shadow 0.2s, background-color 0.2s;
+  transition: opacity 0.5s ease, max-height 0.5s ease, padding 0.5s ease, margin 0.5s ease;
+  max-height: 100px;
 }
 .task-main-info {
   display: flex;
@@ -312,6 +313,18 @@
   transition: color 0.2s;
 }
 
+.task-item.completed {
+  text-decoration: line-through;
+  color: #888;
+  opacity: 0;
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  border: none;
+  box-shadow: none;
+}
 .task-item.completed .task-title {
   text-decoration: line-through;
   color: #888;
