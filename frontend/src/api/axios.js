@@ -30,5 +30,32 @@ apiClient.interceptors.request.use(
   }
 );
 
+// --- Response Interceptor ---
+// This new part inspects every incoming response from the API.
+apiClient.interceptors.response.use(
+  // If the response is successful (status 2xx), just return it.
+  (response) => response,
+
+  // If the response has an error...
+  (error) => {
+    // Check if the error is a 401 Unauthorized response.
+    if (error.response && error.response.status === 401) {
+      console.log("Caught 401 Unauthorized. Logging out.");
+
+      // Remove the invalid token from storage.
+      localStorage.removeItem('token');
+
+      // Redirect the user to the login page.
+      // We use window.location.hash to work with our simple router.
+      // A full reload might be even better to clear all state.
+      window.location.hash = '/login';
+      // window.location.reload(); // Optional: force a full page reload
+    }
+
+    // For all other errors, just pass them along.
+    return Promise.reject(error);
+  }
+);
+
 // 3. Export the configured apiClient so other parts of our app can use it.
 export default apiClient;
