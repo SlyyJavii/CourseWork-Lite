@@ -1,4 +1,4 @@
-/* Main Layout */
+/* --- Main Layout --- */
 .dashboard-layout {
   width: 100vw;
   height: 100vh;
@@ -45,21 +45,33 @@
   overflow: hidden;
 }
 
-/* Sidebar */
+/* --- Sidebar --- */
 .sidebar {
   width: 250px;
   background-color: #ffffff;
   padding: 1.5rem;
   border-right: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .sidebar-title {
   font-size: 1.1rem;
   font-weight: 600;
   color: #555;
-  margin-bottom: 1rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.sidebar nav {
+  flex-grow: 1;
 }
 
 .sidebar nav ul {
@@ -98,22 +110,38 @@
   flex-shrink: 0;
 }
 
-/* Task List */
+/* --- Task List --- */
 .task-list-container {
   flex-grow: 1;
   padding: 2rem;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
-.task-list-header {
+.task-list-main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.task-list-main-header h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #333;
+}
+
+.task-list-column-headers {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
   padding: 0 1rem 0.5rem 1rem;
   border-bottom: 2px solid #e0e0e0;
   margin-bottom: 1rem;
 }
 
-.task-list-header h3 {
+.task-list-column-headers h3 {
   font-size: 0.875rem;
   font-weight: 600;
   color: #666;
@@ -122,7 +150,8 @@
 
 .task-item {
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
   align-items: center;
   background-color: #ffffff;
   padding: 1rem;
@@ -137,47 +166,23 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.task-details {
-  display: flex;
-  flex-direction: column;
-}
-
 .task-title {
   font-weight: 600;
   color: #333;
 }
 
-.task-course-name {
-  font-size: 0.8rem;
-  color: #777;
-}
-
 .task-due-date {
   font-weight: 500;
   color: #555;
+  font-size: 0.9rem;
 }
 
-.task-priority {
-  padding: 0.25rem 0.75rem;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-align: center;
-}
-
-.priority-high {
-  background-color: #fde2e2;
-  color: #c53030;
-}
-
-.priority-medium {
-  background-color: #fefcbf;
-  color: #b7791f;
-}
-
-.priority-low {
-  background-color: #e6fffa;
-  color: #2c7a7b;
+.task-course-name {
+  font-size: 0.9rem;
+  color: #777;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .empty-state {
@@ -189,4 +194,39 @@
 .empty-state h3 {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
+}
+
+/* --- Shared "Add" Button Styles --- */
+.add-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  flex-shrink: 0;
+  /* Flexbox properties for perfect centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 2px;
+  /* Optical adjustment for the '+' sign */
+}
+
+.add-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.1);
+}
+
+/* Specific style for the larger "Add Task" button */
+.task-list-main-header .add-button {
+  border-radius: 8px;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
