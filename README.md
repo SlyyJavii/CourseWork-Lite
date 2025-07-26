@@ -39,11 +39,11 @@ Please note as this is hosted on free servers, there is an initial boot time to 
 
 This project was developed by a dedicated team of five students for the CEN 4010 Software Engineering I course.
 
-  * **Leonel Ponce:** 
-  * **Ehab Kayyali:**
-  * **Anelys Izquierdo:** 
-  * **Hazel Hernandez:**
-  * **Javier Brasil:**
+  * **Leonel Ponce** 
+  * **Ehab Kayyali**
+  * **Anelys Izquierdo** 
+  * **Hazel Hernandez**
+  * **Javier Brasil**
 
 ## License
 
