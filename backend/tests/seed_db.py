@@ -1,4 +1,5 @@
-# A standalone script to populate the MongoDB database with sample data.
+# seed_db.py
+# A standalone script to populate the MongoDB database with sample data for a single user.
 
 import os
 from dotenv import load_dotenv
@@ -12,7 +13,7 @@ import bcrypt
 # Load environment variables from .env file
 load_dotenv()
 MONGO_URI = os.getenv("MONGO_URI")
-MONGO_DB_NAME = os.getenv("MONGO_DB_NAME")
+MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "coursework_lite_db") # Default if not set
 
 # --- DATABASE CONNECTION ---
 
@@ -22,12 +23,12 @@ try:
     users_collection = db.users
     courses_collection = db.courses
     tasks_collection = db.tasks
-    print("✅ Successfully connected to MongoDB.")
+    print(f"✅ Successfully connected to MongoDB database: '{MONGO_DB_NAME}'")
 except Exception as e:
     print(f"❌ Error connecting to MongoDB: {e}")
     exit()
 
-# --- UTILITY FUNCTIONS (from auth.py) ---
+# --- UTILITY FUNCTIONS ---
 
 def get_password_hash(password: str) -> str:
     """Hashes a plain-text password using bcrypt."""
@@ -36,18 +37,18 @@ def get_password_hash(password: str) -> str:
     hashed_password_bytes = bcrypt.hashpw(password_bytes, salt)
     return hashed_password_bytes.decode('utf-8')
 
-# --- SAMPLE DATA ---
+# --- SAMPLE DATA FOR A SINGLE USER ---
 
-# 5 sample users
+# 1. Define the 5 sample users for the demonstration
 users_data = [
-    {"username": "leonel_p", "email": "leonel@example.com", "password": "password123"},
-    {"username": "ehab_k", "email": "ehab@example.com", "password": "password123"},
-    {"username": "anelys_i", "email": "anelys@example.com", "password": "password123"},
-    {"username": "hazel_h", "email": "hazel@example.com", "password": "password123"},
-    {"username": "javier_b", "email": "javier@example.com", "password": "password123"},
+    {"username": "Demo User 1", "email": "leon@fiu.edu", "password": "password123"},
+    {"username": "Demo User 2", "email": "ehab@fiu.edu", "password": "password123"},
+    {"username": "Demo User 3", "email": "javi@fiu.edu", "password": "password123"},
+    {"username": "Demo User 4", "email": "haze@fiu.edu", "password": "password123"},
+    {"username": "Demo User 5", "email": "anel@fiu.edu", "password": "password123"},
 ]
 
-# 4 sample courses per user
+# 2. Define the courses for this user
 courses_data = [
     {"courseName": "Software Engineering I", "courseCode": "CEN4010", "colorTag": "#4A90E2"},
     {"courseName": "Calculus II", "courseCode": "MAC2312", "colorTag": "#F5A623"},
@@ -55,75 +56,134 @@ courses_data = [
     {"courseName": "Intro to Art History", "courseCode": "ARH2000", "colorTag": "#B8E986"},
 ]
 
-# 4 sample tasks per course
-tasks_data = [
-    {"title": "Complete Chapter 5 Reading", "priority": "Low"},
-    {"title": "Submit Project Proposal", "priority": "High"},
-    {"title": "Study for Midterm Exam", "priority": "High"},
-    {"title": "Weekly Discussion Post", "priority": "Medium"},
-]
+# 3. Define a rich set of tasks with varied due dates and priorities
+def get_tasks_data(course_docs):
+    now = datetime.now()
+    return [
+        # --- Past Due Tasks (for "Past Due" reminder) ---
+        {
+            "courseName": "Software Engineering I",
+            "title": "Submit Final Project Proposal",
+            "description": "The proposal was due last week.",
+            "dueDate": now - timedelta(days=5),
+            "priority": "High",
+            "status": "active"
+        },
+        {
+            "courseName": "Calculus II",
+            "title": "Complete Problem Set 3",
+            "description": "Includes integration by parts.",
+            "dueDate": now - timedelta(days=2),
+            "priority": "Medium",
+            "status": "active"
+        },
+        # --- Due Soon Task (for "Due Soon" reminder) ---
+        {
+            "courseName": "Database Systems",
+            "title": "Prepare for Quiz on Normalization",
+            "description": "Review 1NF, 2NF, and 3NF.",
+            "dueDate": now + timedelta(hours=12),
+            "priority": "High",
+            "status": "active"
+        },
+        # --- Future Tasks ---
+        {
+            "courseName": "Software Engineering I",
+            "title": "Develop UI Mockups",
+            "description": "Use Figma to create the dashboard view.",
+            "dueDate": now + timedelta(days=7),
+            "priority": "Medium",
+            "status": "active"
+        },
+        {
+            "courseName": "Intro to Art History",
+            "title": "Read Chapter 1: The Renaissance",
+            "description": "Focus on early Italian painters.",
+            "dueDate": now + timedelta(days=10),
+            "priority": "Low",
+            "status": "active"
+        },
+        # --- Completed/Archived Tasks ---
+        {
+            "courseName": "Database Systems",
+            "title": "Install PostgreSQL",
+            "description": "Setup local database environment.",
+            "dueDate": now - timedelta(days=15),
+            "priority": "High",
+            "status": "complete"
+        },
+        {
+            "courseName": "Intro to Art History",
+            "title": "Visit local museum",
+            "description": "Write a short reflection on one piece.",
+            "dueDate": now - timedelta(days=20),
+            "priority": "Medium",
+            "status": "complete"
+        }
+    ]
+
 
 # --- MAIN SEEDING LOGIC ---
 
 def seed_database():
     """
-    Clears existing data and populates the database with new sample data.
+    Clears existing data and populates the database for a single demo user.
     """
-    print("\n🧹 Clearing existing data...")
+    print("\n🧹 Clearing all existing data from collections...")
     users_collection.delete_many({})
     courses_collection.delete_many({})
     tasks_collection.delete_many({})
     print("✅ Collections cleared.")
 
-    print("\n🌱 Starting to seed the database...")
-    total_tasks_created = 0
+    print("\n🌱 Starting to seed the database for multiple users...")
 
-    # Loop through each user
-    for user_info in users_data:
-        print(f"\n👤 Creating user: {user_info['username']}")
-        
-        # Hash password and create user document
+    # 1. Create the user
+    for user_data in users_data:
+        print(f"👤 Creating user: {user_data['username']}")
         user_doc = {
-            "username": user_info["username"],
-            "email": user_info["email"],
-            "password_hash": get_password_hash(user_info["password"]),
+            "username": user_data["username"],
+            "email": user_data["email"],
+            "password_hash": get_password_hash(user_data["password"]),
         }
         user_result = users_collection.insert_one(user_doc)
         user_id = user_result.inserted_id
 
-        # For each user, create their courses
+        # 2. Create the courses for the user
+        course_docs = []
         for course_info in courses_data:
             print(f"  📘 Creating course: {course_info['courseName']}")
-            
             course_doc = {
                 "userId": user_id,
-                "courseName": course_info["courseName"],
-                "courseCode": course_info["courseCode"],
-                "colorTag": course_info["colorTag"],
-                "description": f"A sample course for {user_info['username']}.",
+                **course_info # Unpack the course details
             }
             course_result = courses_collection.insert_one(course_doc)
-            course_id = course_result.inserted_id
-
-            # For each course, create its tasks
-            for i, task_info in enumerate(tasks_data):
-                due_date = datetime.now() + timedelta(days=(i * 5) + 3) # Stagger due dates
-                
+            # Store the created document along with its new ID for task association
+            course_docs.append({"_id": course_result.inserted_id, **course_doc})
+        
+        # 3. Create the tasks, associating them with the correct course
+        print("\n  📝 Creating tasks...")
+        tasks_to_create = get_tasks_data(course_docs)
+        for task_info in tasks_to_create:
+            # Find the corresponding course document to get its ID
+            course = next((c for c in course_docs if c["courseName"] == task_info["courseName"]), None)
+            if course:
                 task_doc = {
                     "userId": user_id,
-                    "courseId": course_id,
+                    "courseId": course["_id"],
                     "title": task_info["title"],
-                    "description": "This is a sample task description.",
-                    "dueDate": due_date,
+                    "description": task_info["description"],
+                    "dueDate": task_info["dueDate"],
                     "priority": task_info["priority"],
-                    "status": "active",
+                    "status": task_info["status"],
                 }
                 tasks_collection.insert_one(task_doc)
-                total_tasks_created += 1
-                print(f"    ✅ Created task: {task_info['title']}")
+                print(f"    ✅ Created task: '{task_info['title']}' for course '{task_info['courseName']}'")
+            else:
+                print(f"    ⚠️ Could not find course '{task_info['courseName']}' to create task.")
 
-    print(f"\n\n🎉 Database seeding complete! Created {len(users_data)} users, {len(users_data) * len(courses_data)} courses, and {total_tasks_created} tasks.")
-    print("You can now log in with any of the sample users. The password for all users is: password123")
+    print(f"\n\n🎉 Database seeding complete!")
+    print(f"Created 1 user, {len(courses_data)} courses, and {len(tasks_to_create)} tasks.")
+    print(f"You can now log in as '{user_data['email']}' with the password 'password123'.")
 
 
 if __name__ == "__main__":
