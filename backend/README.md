@@ -1,4 +1,4 @@
-# CourseWork Lite Backend 📚
+# CourseWork Lite Backend
 
 This repository contains the backend source code for CourseWork-Lite, a lightweight application for managing coursework and related academic activities.
 
@@ -21,7 +21,7 @@ To get a local copy up and running, follow these steps. Please note that this as
 
 1.  **Clone the repository:**
     ```
-    git clone https://github.com/SlyyJavii/CourseWork-Lite/tree/develop
+    git clone https://github.com/SlyyJavii/CourseWork-Lite/tree/main
     ```
 
 2.  **Navigate to the backend directory:**
@@ -45,10 +45,12 @@ To get a local copy up and running, follow these steps. Please note that this as
 
       * Create a `.env` file in the backend root by copying the `.env.example` file.
       * Add your `MONGO_URI`, a secure `JWT_SECRET_KEY`, the `MONGO_DB_NAME`, and adjust your `CORS_ORIGINS` if needed.
-      * I used [JWTSecrets](https://jwtsecrets.com/#generator) to generate a token.
+        * Please note that this project was design for MongoDB Atlas in mind so there are no instructions for Local MongoDB. If you wish to use that please follow those instructions.
+        * If testing locally, utilize the CORS_ORIGINS value in the ```.env.example```.
+        * The JWT Key can be generated here: [JWTSecrets](https://jwtsecrets.com/#generator)
 
 6.  **Run the backend server:**
 
     ```sh
-    uv run uvicorn main:app --reload
+    uv run uvicorn main:app
     ```

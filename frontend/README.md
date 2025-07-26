@@ -2,51 +2,41 @@
 
 A clean, modular React/Vite scaffold for the CourseWork Lite application.
 
----
+## Description
 
-## 📁 Folder Structure
-frontend/
-├── public/ # Static assets & index.html
-├── src/
-│ ├── api/ # Axios wrappers for talking to the FastAPI backend
-│ ├── components/ # Shared UI pieces (Navbar, etc.)
-│ ├── pages/ # Route‑level components (Login, Register, Dashboard…)
-│ ├── styles/ # One CSS file per page/component
-│ ├── App.jsx # Main router & layout
-│ └── main.jsx # ReactDOM entrypoint
-├── .env # (optional) override VITE_API_BASE_URL
-├── package.json
-└── README.md # (this file)
+This software provides the frontend rendering for the CourseWork-Lite Application. It provides access to a landing side, login/register capabilities. A central Dashboard (SPA) to view courses, tasks, and perform CRUD operations on these. It also provides account management tools to update email & password for users.
 
-## 🛠 Work By: Ehab Kayyali
+## Getting Started
 
-As the Infrastructure, Deployment, and Testing Support lead, I:
+To get a local copy up and running, follow these steps. Please note that this assumes you are running Linux, commands may be different for Windows.
 
-- Created the initial scaffold with React + Vite
-- Set up routing using React Router (Login, Register, Dashboard, Courses, Profile, Tasks)
-- Verified all routing and UI page transitions
-- Configured frontend hosting via Vercel
-- Ensured working build for team push
-- Confirmed that all current pages render correctly
+### Prerequisites
 
-✅ **Register is working.**
-🚫 **Login does not yet authenticate — backend connection needed.**
+* Node.js (v18 or higher is recommended)
+* npm (comes bundled with Node.js)
+* A running instance of the [backend server](https://github.com/Kolkenn/CourseWork-Lite/tree/main/backend).
 
-⚠️ UI is currently functional but unstyled (design/layout pass pending).
+### Installation & Setup
 
----
+1.  **Navigate to the frontend directory:**
+    ```sh
+    cd frontend
+    ```
 
-## Quick Start
+2.  **Install dependencies:**
+    ```sh
+    npm install
+    ```
 
-1. **Install Dependencies**  
-   ```bash
-   cd frontend
-   npm install
+3.  **Set up environment variables:**
+    * Create a new file in the `frontend` directory named `.env.local`. ( You can make a copy of the ```.env.example``` file and rename it.)
+    * Add the following line to this file to connect to your local backend server:
+        ```
+        VITE_API_BASE_URL=[http://127.0.0.1:8000](http://127.0.0.1:8000)
+        ```
 
-2. **Run Dev Server**
+4.  **Run the development server:**
+    ```sh
     npm run dev
-Open your browser at http://localhost:5173
-
-3. **Build For Production**
-    npm run build
-Outputs static files to dist/
+    ```
+    The application should now be running, typically at `http://localhost:5173`.

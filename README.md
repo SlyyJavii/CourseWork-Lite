@@ -27,12 +27,20 @@ The application is built with a modern technology stack using a layered architec
 
 To get a local copy up and running review the Backend & Frontend directories for instructions.
 
+Alternatively, you can visit [CourseWork Lite](https://courseworklite.netlify.app) to see the application live.
+Open credentials are below.
+```
+Email: demo@fiu.edu
+Password: password123
+```
+Please note as this is hosted on free servers, there is an initial boot time to load the backend so you may experience long load times on first visit.
+
 ## Project Team
 
 This project was developed by a dedicated team of five students for the CEN 4010 Software Engineering I course.
 
-  * **Leonel Ponce:** Project Manager & Full Stack Developer
-  * **Ehab Kayyali:** Infrastructure, Deployment, & Testing Support
-  * **Anelys Izquierdo:** Frontend Developer (UI Elements)
-  * **Hazel Hernandez:** Frontend Developer (Views, Filters, & Reminders)
-  * **Javier Brasil:** Backend Developer & System Integration Testing
+  * **Leonel Ponce:** 
+  * **Ehab Kayyali:**
+  * **Anelys Izquierdo:** 
+  * **Hazel Hernandez:**
+  * **Javier Brasil:**
