@@ -44,3 +44,7 @@ This project was developed by a dedicated team of five students for the CEN 4010
   * **Anelys Izquierdo:** 
   * **Hazel Hernandez:**
   * **Javier Brasil:**
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
