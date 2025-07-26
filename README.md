@@ -25,7 +25,7 @@ The application is built with a modern technology stack using a layered architec
 
 ## Getting Started
 
-To get a local copy up and running review the Backend & Frontend directories for instructions.
+To get a local copy up and running review the [Backend](https://github.com/SlyyJavii/CourseWork-Lite/tree/main/backend) & [Frontend](https://github.com/SlyyJavii/CourseWork-Lite/tree/main/frontend) directories for instructions.
 
 Alternatively, you can visit [CourseWork Lite](https://courseworklite.netlify.app) to see the application live.
 Open credentials are below.
